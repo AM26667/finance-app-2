@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Fundamentals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0f0e0c; --paper:#f5f0e8; --cream:#ede8dc;
+  --gold:#c9a84c; --gold-light:#f0d898; --muted:#7a7368; --accent:#2c4a3e;
+  --card-bg:#fff; --card-border:#ede8dc; --input-bg:#fff;
+  --chat-bg:#1a1f2e; --chat-surface:#242938; --chat-border:#2e3448; --chat-user:#3d6b5a;
+  --lesson-bg:#f5f0e8; --lesson-text:#444;
+}
+[data-theme="dark"] {
+  --ink:#e8e3d8; --paper:#141414; --cream:#1e1e1e;
+  --gold:#c9a84c; --gold-light:#f0d898; --muted:#8a8375; --accent:#3d6b5a;
+  --card-bg:#1e1e1e; --card-border:#2a2a2a; --input-bg:#1e1e1e;
+  --chat-bg:#0f0f0f; --chat-surface:#1a1a1a; --chat-border:#2a2a2a; --chat-user:#2c4a3e;
+  --lesson-bg:#141414; --lesson-text:#ccc;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;transition:background 0.3s,color 0.3s;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:var(--accent);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:54px;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:1rem;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.05rem;white-space:nowrap;}
+.nav-tabs{display:flex;gap:0.2rem;}
+.nav-tab{padding:0.38rem 0.9rem;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,0.08);}
+.nav-tab.active{color:var(--gold-light);background:rgba(255,255,255,0.12);}
+.nav-right{display:flex;align-items:center;gap:0.5rem;}
+.dark-toggle{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:100px;padding:0.3rem 0.7rem;color:rgba(255,255,255,0.7);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.dark-toggle:hover{background:rgba(255,255,255,0.18);color:#fff;}
+.bookmark-nav{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:100px;padding:0.3rem 0.7rem;color:rgba(255,255,255,0.7);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.bookmark-nav:hover{background:rgba(255,255,255,0.18);color:#fff;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* GUIDE HEADER */
+header{background:var(--accent);padding:2.5rem 2rem 2rem;text-align:center;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.02) 20px,rgba(255,255,255,0.02) 40px);}
+header h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3rem);color:var(--gold-light);letter-spacing:-0.02em;position:relative;}
+header p{color:rgba(255,255,255,0.55);margin-top:0.4rem;font-size:0.95rem;font-weight:300;position:relative;}
+.progress-bar-wrap{max-width:280px;margin:1rem auto 0;position:relative;}
+.progress-bar-track{height:6px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--gold);border-radius:3px;transition:width 0.5s;}
+.progress-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.4rem;}
+
+/* CONTROLS */
+.controls{max-width:1020px;margin:2rem auto 0;padding:0 2rem;}
+.search-wrap{position:relative;margin-bottom:1.1rem;}
+.search-wrap input{width:100%;padding:1rem 1.3rem 1rem 3rem;border-radius:10px;border:1.5px solid var(--card-border);background:var(--input-bg);color:var(--ink);font-size:0.95rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s;}
+.search-wrap input:focus{border-color:var(--gold);}
+.search-wrap input::placeholder{color:var(--muted);}
+.sicon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.filters{display:flex;flex-wrap:wrap;gap:0.55rem;}
+.filter-btn{padding:0.45rem 1rem;border-radius:100px;border:1.5px solid var(--card-border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.83rem;cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover{border-color:var(--gold);color:var(--ink);}
+.filter-btn.active{background:var(--accent);color:var(--gold-light);border-color:var(--accent);}
+.results-info{max-width:1020px;margin:0.75rem auto 0;padding:0 2rem;font-size:0.82rem;color:var(--muted);}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.75rem;max-width:1020px;margin:2rem auto 5rem;padding:0 2rem;}
+.card{background:var(--card-bg);border-radius:16px;padding:1.75rem;border:1px solid var(--card-border);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;animation:fadeUp 0.35s ease both;position:relative;}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.11);}
+.card.hidden{display:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;}
+.card-tag{font-size:0.67rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.22rem 0.65rem;border-radius:4px;}
+.tag-basics{background:#e8f0ec;color:#2c6b49}.tag-investing{background:#e8eef8;color:#2c4a8f}
+.tag-budgeting{background:#f8ede8;color:#8f4a2c}.tag-credit{background:#f3e8f8;color:#6b2c8f}
+.tag-taxes{background:#f8f0e8;color:#8f6b2c}.tag-mindset{background:#f8e8e8;color:#8f2c2c}
+.tag-insurance{background:#e8f8f0;color:#1a6b4a}.tag-income{background:#fff0e8;color:#8f5a1a}
+[data-theme="dark"] .tag-basics{background:#1a2e22;color:#6dbf8a}
+[data-theme="dark"] .tag-investing{background:#1a2238;color:#7aabf0}
+[data-theme="dark"] .tag-budgeting{background:#2e1a12;color:#e8956a}
+[data-theme="dark"] .tag-credit{background:#2a1a38;color:#c07af0}
+[data-theme="dark"] .tag-taxes{background:#2e2412;color:#e8b86a}
+[data-theme="dark"] .tag-mindset{background:#2e1a1a;color:#e86a6a}
+[data-theme="dark"] .tag-insurance{background:#0f2a1e;color:#5ccf9a}
+[data-theme="dark"] .tag-income{background:#2e2012;color:#e8a06a}
+.card-icons{display:flex;align-items:center;gap:0.5rem;}
+.bookmark-btn{background:none;border:none;font-size:1.05rem;cursor:pointer;padding:0.15rem;line-height:1;transition:transform 0.15s;color:var(--muted);}
+.bookmark-btn:hover{transform:scale(1.2);}
+.bookmark-btn.saved{color:var(--gold);}
+.read-badge{font-size:0.6rem;background:#e8f0ec;color:#2c6b49;padding:0.18rem 0.5rem;border-radius:3px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
+[data-theme="dark"] .read-badge{background:#1a2e22;color:#6dbf8a;}
+.card h3{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:0.55rem;line-height:1.35;color:var(--ink);}
+.card p{font-size:0.9rem;color:var(--muted);line-height:1.65;}
+.card-read-time{font-size:0.74rem;color:var(--muted);margin-top:0.75rem;display:flex;align-items:center;gap:0.3rem;}
+.no-results{text-align:center;padding:4rem 1rem;color:var(--muted);grid-column:1/-1;}
+.no-results span{font-size:2.5rem;display:block;margin-bottom:0.75rem;}
+
+/* LESSON PAGE */
+#page-lesson{position:relative;background:var(--lesson-bg);}
+.lesson-content{padding:2.5rem 2rem 140px;max-width:740px;margin:0 auto;}
+.lesson-nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.5rem;}
+.lesson-back{background:none;border:none;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.4rem;transition:opacity 0.2s;padding:0;}
+.lesson-back:hover{opacity:0.65;}
+.lesson-actions{display:flex;align-items:center;gap:0.5rem;}
+.lesson-bm-btn{background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:8px;padding:0.4rem 0.8rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;color:var(--muted);transition:all 0.2s;display:flex;align-items:center;gap:0.35rem;}
+.lesson-bm-btn:hover{border-color:var(--gold);color:var(--ink);}
+.lesson-bm-btn.saved{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+.quiz-btn{background:var(--accent);border:none;border-radius:8px;padding:0.4rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;color:var(--gold-light);transition:all 0.2s;display:flex;align-items:center;gap:0.35rem;}
+.quiz-btn:hover{opacity:0.88;}
+#lessonBody .card-tag{display:inline-block;font-size:0.67rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:4px;margin-bottom:0.75rem;}
+#lessonBody h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.1rem);margin-bottom:1.5rem;line-height:1.2;color:var(--ink);}
+#lessonBody h4{font-size:0.75rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin:1.5rem 0 0.5rem;}
+#lessonBody p{font-size:0.95rem;color:var(--lesson-text);line-height:1.8;margin-bottom:0.85rem;}
+#lessonBody ul{padding-left:1.2rem;margin-bottom:0.9rem;}
+#lessonBody ul li{font-size:0.95rem;color:var(--lesson-text);line-height:1.7;margin-bottom:0.45rem;}
+#lessonBody .age-block{border-radius:10px;padding:0.9rem 1.1rem;margin:0.45rem 0;}
+#lessonBody .age-block.hs{background:#fef9ec;border-left:3px solid #f59e0b;}
+#lessonBody .age-block.twenties{background:#eff6ff;border-left:3px solid #3b82f6;}
+#lessonBody .age-block.thirties{background:#f0fdf4;border-left:3px solid #22c55e;}
+[data-theme="dark"] #lessonBody .age-block.hs{background:#2a2010;border-left:3px solid #f59e0b;}
+[data-theme="dark"] #lessonBody .age-block.twenties{background:#101828;border-left:3px solid #3b82f6;}
+[data-theme="dark"] #lessonBody .age-block.thirties{background:#0e2010;border-left:3px solid #22c55e;}
+#lessonBody .age-block strong{font-size:0.7rem;letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:0.3rem;opacity:0.65;}
+#lessonBody .age-block p{font-size:0.88rem;margin:0;line-height:1.65;}
+#lessonBody .tip{background:var(--cream);border-left:3px solid var(--gold);padding:0.9rem 1rem;border-radius:0 8px 8px 0;font-size:0.9rem;color:var(--accent);font-weight:500;margin-top:1.5rem;}
+[data-theme="dark"] #lessonBody .tip{background:#1e1a0e;color:var(--gold-light);}
+
+/* COMPOUND INTEREST CALCULATOR */
+.calc-widget{background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:14px;padding:1.5rem;margin:1.5rem 0;}
+.calc-widget h4{color:var(--accent);margin-bottom:1rem;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:500px){.calc-row{grid-template-columns:1fr;}}
+.calc-field label{font-size:0.75rem;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.4rem;}
+.calc-field input[type=range]{width:100%;accent-color:var(--accent);}
+.calc-field .val{font-size:1rem;font-weight:600;color:var(--ink);margin-top:0.2rem;}
+.calc-result{background:var(--accent);border-radius:10px;padding:1rem 1.2rem;display:flex;justify-content:space-around;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+.calc-stat{text-align:center;}
+.calc-stat .num{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold-light);}
+.calc-stat .lbl{font-size:0.7rem;color:rgba(255,255,255,0.55);letter-spacing:0.06em;text-transform:uppercase;margin-top:0.2rem;}
+.calc-bars{margin-top:1rem;display:flex;flex-direction:column;gap:0.5rem;}
+.calc-bar-row{display:flex;align-items:center;gap:0.6rem;font-size:0.8rem;color:var(--muted);}
+.calc-bar-track{flex:1;height:8px;background:var(--cream);border-radius:4px;overflow:hidden;}
+[data-theme="dark"] .calc-bar-track{background:#2a2a2a;}
+.calc-bar-fill{height:100%;border-radius:4px;transition:width 0.5s;}
+
+/* NEXT LESSON */
+.next-lesson-block{margin-top:2.5rem;padding:1.2rem 1.4rem;background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;}
+.next-lesson-block:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.next-lesson-label{font-size:0.72rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+.next-lesson-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ink);}
+.next-arrow{font-size:1.3rem;color:var(--gold);flex-shrink:0;}
+
+/* ADVISOR PULL-UP */
+.advisor-trigger{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:150;background:var(--accent);color:var(--gold-light);border:none;border-radius:100px;padding:0.75rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.55rem;box-shadow:0 4px 20px rgba(0,0,0,0.25);transition:transform 0.2s,box-shadow 0.2s,opacity 0.3s;white-space:nowrap;}
+.advisor-trigger:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 6px 28px rgba(0,0,0,0.3);}
+.advisor-trigger.hidden{opacity:0;pointer-events:none;}
+.advisor-trigger .pulse{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.5)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.advisor-drawer{position:fixed;bottom:0;left:0;right:0;z-index:500;background:var(--chat-bg);border-radius:20px 20px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,0.35);transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);display:flex;flex-direction:column;height:72vh;max-height:600px;}
+.advisor-drawer.open{transform:translateY(0);}
+.drawer-handle-bar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.3rem 0.85rem;border-bottom:1px solid var(--chat-border);background:var(--chat-surface);border-radius:20px 20px 0 0;}
+.drawer-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;}
+.drawer-title{font-family:'DM Sans',sans-serif;font-weight:600;color:#fff;font-size:0.93rem;display:flex;align-items:center;gap:0.5rem;}
+.lc-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 2s infinite;}
+.drawer-close{background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.5);border-radius:50%;width:28px;height:28px;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.drawer-close:hover{background:rgba(255,255,255,0.15);color:#fff;}
+.lesson-messages{flex:1;overflow-y:auto;padding:1.1rem 1.3rem;display:flex;flex-direction:column;gap:1rem;}
+.lesson-input-bar{background:var(--chat-surface);border-top:1px solid var(--chat-border);padding:0.85rem 1rem;}
+.lesson-input-wrap{display:flex;gap:0.6rem;align-items:flex-end;max-width:680px;margin:0 auto;}
+.lesson-input-wrap textarea{flex:1;background:var(--chat-bg);border:1.5px solid var(--chat-border);border-radius:10px;color:rgba(255,255,255,0.9);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.65rem 0.85rem;outline:none;resize:none;line-height:1.5;max-height:100px;transition:border 0.2s;scrollbar-width:thin;}
+.lesson-input-wrap textarea:focus{border-color:var(--gold);}
+.lesson-input-wrap textarea::placeholder{color:rgba(255,255,255,0.22);}
+
+/* QUIZ MODAL */
+.quiz-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.quiz-overlay.open{opacity:1;pointer-events:all;}
+.quiz-modal{background:var(--card-bg);border-radius:18px;max-width:520px;width:100%;padding:2rem;position:relative;transform:translateY(20px);transition:transform 0.25s;max-height:90vh;overflow-y:auto;}
+.quiz-overlay.open .quiz-modal{transform:none;}
+.quiz-close{position:absolute;top:1rem;right:1rem;background:var(--cream);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;color:var(--muted);font-size:0.9rem;display:flex;align-items:center;justify-content:center;}
+[data-theme="dark"] .quiz-close{background:#2a2a2a;}
+.quiz-header{margin-bottom:1.5rem;}
+.quiz-header h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--ink);margin-bottom:0.3rem;}
+.quiz-progress-track{height:4px;background:var(--cream);border-radius:2px;margin-top:0.75rem;overflow:hidden;}
+[data-theme="dark"] .quiz-progress-track{background:#2a2a2a;}
+.quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s;}
+.quiz-question{font-size:0.95rem;font-weight:600;color:var(--ink);margin-bottom:1rem;line-height:1.5;}
+.quiz-options{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.2rem;}
+.quiz-opt{padding:0.8rem 1rem;border-radius:10px;border:1.5px solid var(--card-border);background:transparent;text-align:left;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--ink);cursor:pointer;transition:all 0.18s;line-height:1.4;}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);background:rgba(44,74,62,0.06);}
+.quiz-opt.correct{border-color:#22c55e;background:#f0fdf4;color:#15803d;}
+[data-theme="dark"] .quiz-opt.correct{background:#0e2010;color:#6dbf8a;}
+.quiz-opt.wrong{border-color:#ef4444;background:#fff1f1;color:#b91c1c;}
+[data-theme="dark"] .quiz-opt.wrong{background:#2a0e0e;color:#f87171;}
+.quiz-opt.reveal{border-color:#22c55e;background:#f0fdf4;color:#15803d;opacity:0.7;}
+[data-theme="dark"] .quiz-opt.reveal{background:#0e2010;}
+.quiz-feedback{font-size:0.88rem;line-height:1.6;padding:0.8rem 1rem;border-radius:8px;margin-bottom:1rem;}
+.quiz-feedback.correct{background:#f0fdf4;color:#15803d;border-left:3px solid #22c55e;}
+[data-theme="dark"] .quiz-feedback.correct{background:#0e2010;}
+.quiz-feedback.wrong{background:#fff1f1;color:#b91c1c;border-left:3px solid #ef4444;}
+[data-theme="dark"] .quiz-feedback.wrong{background:#2a0e0e;color:#f87171;}
+.quiz-next-btn{width:100%;padding:0.8rem;border-radius:10px;border:none;background:var(--accent);color:var(--gold-light);font-family:'DM Sans',sans-serif;font-size:0.93rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+.quiz-next-btn:hover{opacity:0.88;}
+.quiz-score{text-align:center;padding:1rem 0;}
+.quiz-score .score-num{font-family:'Playfair Display',serif;font-size:3rem;color:var(--accent);}
+.quiz-score p{font-size:0.95rem;color:var(--muted);margin-top:0.5rem;}
+.quiz-score .retake{margin-top:1rem;background:var(--cream);border:none;border-radius:8px;padding:0.65rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;cursor:pointer;color:var(--accent);font-weight:600;}
+[data-theme="dark"] .quiz-score .retake{background:#2a2a2a;color:var(--gold-light);}
+
+/* BOOKMARKS PAGE */
+.bookmarks-page{max-width:900px;margin:2.5rem auto;padding:0 1.5rem;}
+.bookmarks-page h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--ink);margin-bottom:0.5rem;}
+.bookmarks-page p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;}
+.bookmarks-empty{text-align:center;padding:3rem 1rem;color:var(--muted);}
+.bookmarks-empty span{font-size:2.5rem;display:block;margin-bottom:0.75rem;}
+
+/* CHAT */
+.chat-page{background:var(--chat-bg);min-height:calc(100vh - 54px);display:flex;flex-direction:column;}
+.chat-header{background:var(--chat-surface);border-bottom:1px solid var(--chat-border);padding:1.4rem 2rem 1.2rem;text-align:center;}
+.chat-header h2{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.45rem;}
+.chat-header p{color:rgba(255,255,255,0.4);font-size:0.86rem;margin-top:0.25rem;}
+.starters{padding:1.25rem 1.5rem 0;display:flex;gap:0.55rem;flex-wrap:wrap;max-width:760px;margin:0 auto;width:100%;}
+.starter-btn{padding:0.45rem 0.95rem;border-radius:100px;border:1px solid var(--chat-border);background:var(--chat-surface);color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.81rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.starter-btn:hover{border-color:var(--gold);color:var(--gold-light);}
+.messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem;max-width:760px;margin:0 auto;width:100%;}
+.msg{display:flex;gap:0.7rem;align-items:flex-start;animation:msgIn 0.28s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.msg.user{flex-direction:row-reverse;}
+.avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.avatar.ai{background:var(--accent);color:var(--gold-light);font-weight:700;font-size:0.7rem;letter-spacing:0.05em;font-family:'Playfair Display',serif;}
+.avatar.user{background:var(--chat-user);color:#fff;font-size:0.85rem;}
+.bubble{max-width:84%;padding:0.85rem 1rem;border-radius:14px;font-size:0.91rem;line-height:1.72;color:rgba(255,255,255,0.87);}
+.bubble.ai{background:var(--chat-surface);border:1px solid var(--chat-border);border-top-left-radius:4px;}
+.bubble.user{background:var(--chat-user);border-top-right-radius:4px;}
+.bubble strong{color:var(--gold-light);}
+.bubble ul{padding-left:1.2rem;margin:0.45rem 0;}
+.bubble ul li{margin-bottom:0.28rem;}
+.bubble .b-tip{background:rgba(201,168,76,0.13);border-left:2px solid var(--gold);padding:0.55rem 0.8rem;border-radius:0 6px 6px 0;margin-top:0.7rem;font-size:0.86rem;color:var(--gold-light);}
+.typing{display:flex;gap:5px;align-items:center;padding:0.3rem 0;}
+.typing span{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:blink 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s}.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0.2;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
+.chat-input-bar{background:var(--chat-surface);border-top:1px solid var(--chat-border);padding:0.9rem 1.5rem;position:sticky;bottom:0;}
+.chat-input-wrap{max-width:760px;margin:0 auto;display:flex;gap:0.7rem;align-items:flex-end;}
+.chat-input-wrap textarea{flex:1;background:var(--chat-bg);border:1.5px solid var(--chat-border);border-radius:10px;color:rgba(255,255,255,0.9);font-family:'DM Sans',sans-serif;font-size:0.92rem;padding:0.7rem 0.9rem;outline:none;resize:none;line-height:1.5;max-height:120px;transition:border 0.2s;scrollbar-width:thin;}
+.chat-input-wrap textarea:focus{border-color:var(--gold);}
+.chat-input-wrap textarea::placeholder{color:rgba(255,255,255,0.22);}
+.send-btn{width:40px;height:40px;border-radius:10px;border:none;background:var(--accent);color:var(--gold-light);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0;}
+.send-btn:hover{background:#3a6354;}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.chat-note{text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.18);margin-top:0.55rem;max-width:760px;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <span class="nav-logo">Finance Fundamentals</span>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('guide',this)">📚 Learn</button>
+      <button class="nav-tab" onclick="showPage('chat',this)">💬 Advisor</button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="bookmark-nav" onclick="showPage('bookmarks',this)">🔖 Saved</button>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙 Dark</button>
+  </div>
+</nav>
+
+<!-- GUIDE PAGE -->
+<div class="page active" id="page-guide">
+  <header>
+    <h1>Finance Fundamentals</h1>
+    <p>Everything I wish I knew — organized, searchable, and free.</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 of 0 lessons read</div>
+    </div>
+  </header>
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="sicon">🔍</span>
+      <input type="text" id="search" placeholder="Search — 'compound interest', 'Roth IRA', 'emergency fund'…" oninput="filterCards()">
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('basics',this)">Basics</button>
+      <button class="filter-btn" onclick="setFilter('budgeting',this)">Budgeting</button>
+      <button class="filter-btn" onclick="setFilter('investing',this)">Investing</button>
+      <button class="filter-btn" onclick="setFilter('credit',this)">Credit</button>
+      <button class="filter-btn" onclick="setFilter('taxes',this)">Taxes</button>
+      <button class="filter-btn" onclick="setFilter('mindset',this)">Mindset</button>
+      <button class="filter-btn" onclick="setFilter('insurance',this)">Insurance</button>
+      <button class="filter-btn" onclick="setFilter('income',this)">Income</button>
+    </div>
+  </div>
+  <div class="results-info" id="resultsInfo"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- LESSON PAGE -->
+<div class="page" id="page-lesson">
+  <div class="lesson-content">
+    <div class="lesson-nav-row">
+      <button class="lesson-back" onclick="closeLesson()">← Back to topics</button>
+      <div class="lesson-actions">
+        <button class="lesson-bm-btn" id="lessonBmBtn" onclick="toggleLessonBookmark()">🔖 Save</button>
+        <button class="quiz-btn" onclick="openQuiz()">✏️ Take Quiz</button>
+      </div>
+    </div>
+    <div id="lessonBody"></div>
+    <div id="nextLessonBlock"></div>
+  </div>
+  <button class="advisor-trigger" id="advisorTrigger" onclick="openDrawer()">
+    <span class="pulse"></span>Ask the Advisor
+  </button>
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="advisor-drawer" id="advisorDrawer">
+    <div class="drawer-handle-bar">
+      <div class="drawer-handle"></div>
+      <div class="drawer-title"><span class="lc-dot"></span>Ask the Advisor</div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="lesson-messages" id="lessonMessages"></div>
+    <div class="lesson-input-bar">
+      <div class="lesson-input-wrap">
+        <textarea id="lessonChatInput" placeholder="Ask anything about this topic…" rows="1" onkeydown="handleLessonKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="lessonSendBtn" onclick="sendLessonMessage()">➤</button>
+      </div>
+      <div class="chat-note">Powered by AI · Educational only</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-modal">
+    <button class="quiz-close" onclick="closeQuiz()">✕</button>
+    <div id="quizContent"></div>
+  </div>
+</div>
+
+<!-- BOOKMARKS PAGE -->
+<div class="page" id="page-bookmarks">
+  <div class="bookmarks-page">
+    <button class="lesson-back" onclick="showPage('guide',document.querySelector('.nav-tab'))" style="margin-bottom:1.5rem;">← Back to topics</button>
+    <h2>Saved Lessons</h2>
+    <p>Lessons you've bookmarked for quick access.</p>
+    <div class="grid" id="bookmarksGrid"></div>
+  </div>
+</div>
+
+<!-- CHAT PAGE -->
+<div class="page" id="page-chat">
+  <div class="chat-page">
+    <div class="chat-header">
+      <h2>Your Personal Finance Advisor</h2>
+      <p>Ask anything — no question is too basic.</p>
+    </div>
+    <div class="starters" id="starters">
+      <button class="starter-btn" onclick="sendStarter(this)">I'm in high school, where do I start?</button>
+      <button class="starter-btn" onclick="sendStarter(this)">I just got my first real job</button>
+      <button class="starter-btn" onclick="sendStarter(this)">I have student loan debt</button>
+      <button class="starter-btn" onclick="sendStarter(this)">How do I invest with little money?</button>
+      <button class="starter-btn" onclick="sendStarter(this)">Should I pay off debt or invest?</button>
+      <button class="starter-btn" onclick="sendStarter(this)">I'm in my 30s and feel behind</button>
+      <button class="starter-btn" onclick="sendStarter(this)">What's a Roth IRA?</button>
+      <button class="starter-btn" onclick="sendStarter(this)">How do credit cards actually work?</button>
+    </div>
+    <div class="messages" id="messages">
+      <div class="msg">
+        <div class="avatar ai">FF</div>
+        <div class="bubble ai">Hey! I'm your Finance Fundamentals advisor. Whether you're 16 trying to understand your first paycheck, or 34 wondering if you're behind on retirement — I've got you.<br><br><strong>What's your situation?</strong> Tell me your age range and what's on your mind. No jargon, no judgment.</div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <div class="chat-input-wrap">
+        <textarea id="chatInput" placeholder="Ask anything about money…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+      </div>
+      <div class="chat-note">Powered by AI · Educational only · Not licensed financial advice</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DARK MODE ============
+function toggleDark(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.getElementById('darkBtn').textContent=isDark?'🌙 Dark':'☀️ Light';
+  try{localStorage.setItem('ff-theme',isDark?'light':'dark');}catch(e){}
+}
+(function(){try{const t=localStorage.getItem('ff-theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('darkBtn').textContent='☀️ Light';}}catch(e){}})();
+
+// ============ PAGE NAV ============
+function showPage(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  if(btn&&btn.classList.contains('nav-tab'))btn.classList.add('active');
+  if(page==='bookmarks')renderBookmarks();
+  window.scrollTo(0,0);
+}
+
+// ============ STATE ============
+let bookmarks=[], readLessons=[], currentTopic=null;
+try{bookmarks=JSON.parse(localStorage.getItem('ff-bookmarks')||'[]');}catch(e){}
+try{readLessons=JSON.parse(localStorage.getItem('ff-read')||'[]');}catch(e){}
+
+function saveState(){
+  try{localStorage.setItem('ff-bookmarks',JSON.stringify(bookmarks));localStorage.setItem('ff-read',JSON.stringify(readLessons));}catch(e){}
+}
+
+// ============ TOPICS ============
+const topics = [
+  {
+    tag:"basics",tagLabel:"Basics",readMins:5,
+    title:"The Time Value of Money",
+    summary:"A dollar today is worth more than a dollar tomorrow — this one idea explains almost every smart money move you'll ever make.",
+    quiz:[
+      {q:"What does 'Present Value' mean?",opts:["The value of money you have right now","What a future amount of money is worth today","How much you'll earn next year","Your current bank balance"],ans:1,exp:"Present Value tells you what a future sum is worth in today's dollars — because money you invest now grows over time."},
+      {q:"Person A starts investing $200/month at 25. Person B starts at 35. At 7% return, who has more at retirement?",opts:["Person B, because they invest more per month","They end up equal","Person A, because time compounds more","It depends on the market"],ans:2,exp:"Person A ends with roughly twice as much — purely from the extra 10 years of compounding, even though they invested only $24,000 more total."},
+      {q:"Spending $500 today at 7% growth over 20 years really costs you approximately how much in foregone wealth?",opts:["$500","$750","$1,900","$5,000"],ans:2,exp:"At 7% annual return, $500 grows to roughly $1,934 over 20 years. That's the true 'opportunity cost' of spending it today."}
+    ],
+    body:`<p>The time value of money (TVM) is the most important concept in all of finance. Money available <em>right now</em> is worth more than the same amount later — because today's money can immediately earn returns.</p>
+    <h4>The core idea</h4>
+    <ul>
+      <li><strong>Present Value (PV):</strong> What is a future sum worth today? A promise of $10,000 in 10 years is not worth $10,000 today.</li>
+      <li><strong>Future Value (FV):</strong> How much does today's money grow to? $5,000 at 7% annually becomes ~$9,836 in 10 years.</li>
+    </ul>
+    <h4>A concrete example</h4>
+    <p>Person A invests $200/month starting at 25. Person B waits until 35. Same 7% return. Person A ends with ~$525,000 (invested $96k total). Person B ends with ~$243,000 (invested $72k total). More money invested, less to show — because time was lost.</p>
+    <h4>Common mistake</h4>
+    <p>Undervaluing TVM on purchases. Spending $500 today at 7% growth over 20 years is really ~$1,900 in foregone wealth.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Every dollar you save now has 50 years to compound. Time is your biggest advantage — most adults would pay anything to have it back.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>You're in the golden window. $1 invested at 22 is worth ~$15 at 65 (at 7%). The amount matters less than starting now.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>You still have 30+ years of compounding ahead. Focus on maximizing contributions rather than dwelling on lost time.</p></div>
+    <div class="tip">💡 Action step: Open a free compound interest calculator online. Enter your age, $100/month, 7% return, and see what it becomes at 65. Then change the starting age by 5 years and watch the difference.</div>`
+  },
+  {
+    tag:"basics",tagLabel:"Basics",readMins:5,
+    title:"Compound Interest",
+    summary:"Earning interest on your interest. Works for you in investing, brutally against you in debt.",
+    quiz:[
+      {q:"What is the Rule of 72?",opts:["The maximum tax rate","Divide 72 by your interest rate to find how long to double your money","72 is the ideal credit score","The number of months in a 6-year loan"],ans:1,exp:"Divide 72 by your annual return rate to estimate how many years it takes to double your money. At 8%, that's roughly 9 years."},
+      {q:"$10,000 at 7% simple interest after 30 years equals?",opts:["$76,123","$31,000","$21,000","$14,000"],ans:1,exp:"Simple interest earns $700/year × 30 = $21,000 in interest, for a total of $31,000. Compound interest on the same amount grows to $76,123."},
+      {q:"A $5,000 credit card balance at 24% APR with minimum payments will cost you approximately how much in total interest?",opts:["$500","$1,000","$4,000","$10,000"],ans:2,exp:"High-interest debt compounds against you just as powerfully as investments compound for you. That $5k balance making minimums costs nearly $4,000 in interest alone."}
+    ],
+    body:`<p>Compound interest means your returns generate their own returns. It starts slowly then accelerates dramatically — the longer it runs, the more powerful it becomes.</p>
+    <h4>Simple vs. Compound</h4>
+    <ul>
+      <li><strong>Simple interest:</strong> 7% on $10,000 = $700/year, every year. After 30 years: $31,000.</li>
+      <li><strong>Compound interest:</strong> 7% on whatever you have, including past gains. After 30 years: $76,123. Same investment. $45,000 more.</li>
+    </ul>
+    <h4>The Rule of 72</h4>
+    <p>Divide 72 by your interest rate to find how long it takes to double your money.</p>
+    <ul>
+      <li>At 6%: doubles every 12 years</li>
+      <li>At 8%: doubles every 9 years</li>
+      <li>At 24% (credit card APR): your <em>debt</em> doubles every 3 years</li>
+    </ul>
+    <h4>The dark side</h4>
+    <p>A $5,000 credit card balance at 24% APR making minimum payments takes 8+ years to pay off and costs nearly $4,000 in interest.</p>
+    <h4>Try it yourself</h4>
+    <div class="calc-widget" id="compoundCalc">
+      <h4>Compound Interest Calculator</h4>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Starting amount</label>
+          <input type="range" min="0" max="50000" step="500" value="1000" id="calcP" oninput="updateCalc()">
+          <div class="val" id="calcPval">$1,000</div>
+        </div>
+        <div class="calc-field">
+          <label>Monthly contribution</label>
+          <input type="range" min="0" max="2000" step="25" value="200" id="calcM" oninput="updateCalc()">
+          <div class="val" id="calcMval">$200/mo</div>
+        </div>
+        <div class="calc-field">
+          <label>Annual return rate</label>
+          <input type="range" min="1" max="15" step="0.5" value="7" id="calcR" oninput="updateCalc()">
+          <div class="val" id="calcRval">7%</div>
+        </div>
+        <div class="calc-field">
+          <label>Years</label>
+          <input type="range" min="1" max="50" step="1" value="30" id="calcY" oninput="updateCalc()">
+          <div class="val" id="calcYval">30 yrs</div>
+        </div>
+      </div>
+      <div class="calc-result" id="calcResult"></div>
+      <div class="calc-bars" id="calcBars"></div>
+    </div>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>$1,000 invested at 17 becomes ~$29,000 by 67 at 7% without adding another dollar. The hardest part is being patient enough not to spend it.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Open a Roth IRA. Even $50/month. Gains grow completely tax-free — compounding works even harder because taxes never take a cut.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Focus on not interrupting compounding. Every time you sell during a dip or pause contributions, you reset the snowball.</p></div>
+    <div class="tip">💡 Action step: Apply the Rule of 72 to your credit card APR. That's how fast your balance doubles if you only pay minimums.</div>`
+  },
+  {
+    tag:"budgeting",tagLabel:"Budgeting",readMins:4,
+    title:"The 50/30/20 Rule",
+    summary:"50% needs, 30% wants, 20% savings and debt. A simple sanity check on your spending at any income.",
+    quiz:[
+      {q:"The 50/30/20 rule should be calculated on which income figure?",opts:["Your gross salary","Your take-home (after-tax) pay","Your hourly rate × 40 hours","Your annual bonus"],ans:1,exp:"Always use take-home pay — what actually hits your bank account after taxes and deductions. Gross salary overstates what you have to work with."},
+      {q:"Which of these counts as a 'Need' in the 50/30/20 framework?",opts:["Netflix subscription","Weekly restaurant dinners","Minimum loan payments","Gym membership"],ans:2,exp:"Minimum debt payments are needs — you must pay them. Subscriptions, dining out, and gym memberships are 'wants' — real life, but cuttable if needed."},
+      {q:"If housing in your city forces 'needs' above 50%, what should you compress first?",opts:["Savings (the 20%)","Wants (the 30%)","Both equally","Nothing — just earn more"],ans:1,exp:"The 20% savings floor is the most important number to protect. If needs are high, reduce wants (dining, subscriptions, extras) before touching savings goals."}
+    ],
+    body:`<p>Most people underestimate their spending by 20–30%. The 50/30/20 rule gives you an immediate reference point.</p>
+    <h4>Breaking it down (on take-home pay)</h4>
+    <ul>
+      <li><strong>50% Needs:</strong> Rent, groceries, utilities, insurance, minimum loan payments.</li>
+      <li><strong>30% Wants:</strong> Restaurants, streaming, travel, hobbies — real life, but cuttable.</li>
+      <li><strong>20% Goals:</strong> Emergency fund, retirement, extra debt payoff, saving for a house.</li>
+    </ul>
+    <h4>Always use take-home pay</h4>
+    <p>If you earn $60,000/year, your take-home is ~$44,000 (~$3,667/month). Use that — not your salary.</p>
+    <h4>When it doesn't fit</h4>
+    <p>In expensive cities, housing alone may eat 40–50% of take-home. Compress wants before savings. The 20% floor is what to protect above all else.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Practice the percentage habit now. If you earn $200 from a job, put $40 (20%) into savings before touching anything else. You're training a reflex.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Do a full spending audit of one month. Most people find $200–400/month in forgotten subscriptions and small purchases.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Revisit your budget annually. Mortgage, childcare, and cars add up fast. If needs creep above 55%, something structural needs to change.</p></div>
+    <div class="tip">💡 Action step: Pull up last month's statements. Categorize every transaction as Need, Want, or Goal. Your actual percentages will surprise you.</div>`
+  },
+  {
+    tag:"budgeting",tagLabel:"Budgeting",readMins:4,
+    title:"Emergency Fund",
+    summary:"3–6 months of expenses in cash, untouched. The foundation everything else is built on.",
+    quiz:[
+      {q:"Where should you keep your emergency fund?",opts:["Invested in the stock market for growth","Under your mattress","A high-yield savings account (HYSA)","Your checking account"],ans:2,exp:"A HYSA keeps money accessible while earning 4–5% APY. The stock market is wrong because it can crash exactly when you need the money most."},
+      {q:"How much should a self-employed person with irregular income have in their emergency fund?",opts:["1 month","3 months","6 months","9–12 months"],ans:3,exp:"Self-employed people face income variability and have no employer safety net. 9–12 months provides meaningful protection against slow periods or gaps in work."},
+      {q:"Which of these counts as a legitimate emergency fund use?",opts:["A 50% off sale on something you wanted","A spontaneous vacation deal","Your car's transmission failing","Investing in a friend's business"],ans:2,exp:"Car repairs that keep you able to work and get around are genuine emergencies. Sales, vacations, and investment opportunities should come from separate savings."}
+    ],
+    body:`<p>An emergency fund doesn't grow your wealth — it protects it. Without one, any unexpected expense forces you into high-interest debt.</p>
+    <h4>How much</h4>
+    <ul>
+      <li><strong>3 months:</strong> Stable job, dual income, no dependents.</li>
+      <li><strong>6 months:</strong> Standard for most single-income households.</li>
+      <li><strong>9–12 months:</strong> Self-employed, irregular income, or dependents with special needs.</li>
+    </ul>
+    <h4>Where to keep it</h4>
+    <p>A <strong>High-Yield Savings Account (HYSA)</strong>. Many pay 4–5% APY — money earns something while staying fully accessible. Do not invest in stocks; markets crash exactly when jobs disappear.</p>
+    <h4>What counts as an emergency</h4>
+    <ul>
+      <li>✅ Job loss, major medical bill, essential car repair, critical home repair</li>
+      <li>❌ Vacation, a sale, an investment "opportunity"</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Start with a $1,000 mini-emergency fund first. It handles most crises without a credit card. Then build to 3 months. $25/week becomes $1,300 in a year.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>With a mortgage, kids, or single income, the stakes are higher. A 6-month fund is non-negotiable. Calculate real monthly essential expenses, not income.</p></div>
+    <div class="tip">💡 Action step: Open a free HYSA today (Ally, Marcus, SoFi all have no minimums). Name it "Emergency Fund." Set a recurring transfer on payday, even if it's just $25.</div>`
+  },
+  {
+    tag:"investing",tagLabel:"Investing",readMins:5,
+    title:"Index Funds & ETFs",
+    summary:"Low-cost funds that own the entire market. They beat the vast majority of professional managers over 10+ years.",
+    quiz:[
+      {q:"What is an expense ratio?",opts:["The tax you pay on investment gains","The annual fee a fund charges as a % of assets","The ratio of stocks to bonds in a fund","Your brokerage account fee"],ans:1,exp:"The expense ratio is what the fund takes annually to operate. Index funds charge 0.03–0.20%; active funds charge 0.5–1.5%. On $500k, a 1% difference costs $5,000/year."},
+      {q:"What does the S&P 500 index track?",opts:["The 500 richest Americans","500 random global companies","The 500 largest US publicly traded companies","All US stocks"],ans:2,exp:"The S&P 500 is a list of the 500 largest US publicly traded companies by market cap. An S&P 500 index fund owns a tiny slice of every company on that list."},
+      {q:"What percentage of actively managed funds underperform their benchmark index over 15 years (per SPIVA data)?",opts:["30%","50%","70%","~90%"],ans:3,exp:"The annual SPIVA report consistently shows roughly 90% of active funds underperform their benchmark index after fees over 15-year periods. Passive investing wins."}
+    ],
+    body:`<p>The most counterintuitive truth in investing: doing less and paying less consistently beats doing more. Index funds make this accessible to anyone.</p>
+    <h4>What an index fund is</h4>
+    <p>An index is a list — the S&P 500 is the 500 largest US companies. An index fund buys a tiny slice of every company on that list. No manager picks stocks, which is both its strength and why it's cheap.</p>
+    <h4>The fee problem</h4>
+    <p>Active funds charge 0.5–1.5%/year. Index funds charge 0.03–0.20%. On a $500k portfolio, a 1% fee difference costs $5,000/year. Over 30 years, a 1% higher fee reduces your balance by ~25%.</p>
+    <h4>Best starting funds</h4>
+    <ul>
+      <li><strong>S&P 500:</strong> FXAIX (Fidelity), VOO (Vanguard ETF)</li>
+      <li><strong>Total US Market:</strong> VTI, FSKAX — slightly broader</li>
+      <li><strong>Total World:</strong> VT — global diversification in one fund</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>You can invest as a minor through a custodial account a parent opens with you. Even $10–$25/month in an S&P 500 fund is a better education than any textbook.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Open a Roth IRA at Fidelity, Vanguard, or Schwab. Invest it in one total market index fund. Set automatic monthly contributions. That's genuinely all you need.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Index funds remain the core. Consider adding international exposure (VXUS) if your portfolio is all US stocks. Rebalance once per year.</p></div>
+    <div class="tip">💡 Action step: Log into your 401k. Sort funds by expense ratio. Choose the index fund with the lowest cost — usually "index" or "S&P 500" in the name.</div>`
+  },
+  {
+    tag:"investing",tagLabel:"Investing",readMins:6,
+    title:"Retirement Accounts (401k & IRA)",
+    summary:"Tax-advantaged containers for your investments. Not using them fully is leaving thousands on the table every year.",
+    quiz:[
+      {q:"What is the biggest mistake people make with a Roth IRA?",opts:["Contributing too much","Opening it at a bank","Leaving the money as cash instead of investing it","Choosing the wrong brokerage"],ans:2,exp:"Opening an IRA and leaving the money sitting as cash is extremely common. The account must be invested in actual funds (like an index fund) to grow. Log in and check."},
+      {q:"In what order should you prioritize retirement saving?",opts:["IRA first, then 401k match, then brokerage","401k to get full employer match, then Roth IRA, then max 401k","Max 401k first, then IRA","It doesn't matter — just save somewhere"],ans:1,exp:"The employer match is a guaranteed 50–100% instant return — always capture it first. Then Roth IRA for tax-free growth. Then max the 401k."},
+      {q:"What's the key advantage of a Roth IRA over a Traditional IRA?",opts:["Higher contribution limits","No income limits","Withdrawals in retirement are completely tax-free","You get a tax deduction now"],ans:2,exp:"With a Roth, you contribute after-tax money and your investments grow 100% tax-free. Every dollar you withdraw in retirement is yours — the IRS gets nothing."}
+    ],
+    body:`<p>Retirement accounts aren't investments themselves — they're containers that hold investments and protect them from taxes as they grow.</p>
+    <h4>The 401(k)</h4>
+    <p>Employer-sponsored. Contributions come out pre-tax, reducing taxable income now. Taxed on withdrawal in retirement. 2025 limit: $23,500/year.</p>
+    <p><strong>Employer match = instant 50–100% guaranteed return.</strong> Always contribute at least enough to get the full match. Not doing so is declining part of your compensation.</p>
+    <h4>The Roth IRA</h4>
+    <p>You open this yourself. Contribute after-tax money. Grows completely tax-free. Withdrawals in retirement are tax-free. 2025 limit: $7,000/year.</p>
+    <h4>The priority order</h4>
+    <ul>
+      <li>1️⃣ 401k → capture full employer match</li>
+      <li>2️⃣ Roth IRA → max out ($7,000/year)</li>
+      <li>3️⃣ 401k → max out ($23,500/year)</li>
+      <li>4️⃣ Taxable brokerage account</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Open a Roth IRA this year. You're likely in a lower tax bracket now than you'll be in your 40s — paying tax now and getting tax-free growth forever is a phenomenal deal.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Roll over old 401ks from previous jobs. Check that your accounts are actually invested in funds, not sitting as uninvested cash inside the account.</p></div>
+    <div class="tip">💡 Common mistake: Opening an IRA and leaving the money as cash. The account must be invested in actual funds to grow. Log in and check yours right now.</div>`
+  },
+  {
+    tag:"credit",tagLabel:"Credit",readMins:5,
+    title:"How Credit Scores Work",
+    summary:"Your score determines what you pay on loans for decades. A 100-point difference on a mortgage can cost $50,000–100,000.",
+    quiz:[
+      {q:"Which FICO factor has the biggest impact on your score?",opts:["Credit utilization (30%)","Length of history (15%)","Payment history (35%)","New credit (10%)"],ans:2,exp:"Payment history is 35% of your FICO score — the single biggest factor. One missed payment (30+ days late) can drop your score 60–110 points and stays on your report for 7 years."},
+      {q:"What credit utilization ratio is considered excellent?",opts:["Under 50%","Under 30%","Under 10%","It doesn't matter"],ans:2,exp:"Under 10% utilization is excellent. Under 30% is acceptable. This factor updates monthly — it's the fastest way to quickly improve your score by paying down balances."},
+      {q:"Why should you generally NOT close old credit card accounts?",opts:["Closing them increases your APR","It shortens your average credit history length","It causes a hard inquiry","Closed accounts can't be reopened"],ans:1,exp:"The length of your credit history is 15% of your score. Closing old accounts reduces your average account age, potentially lowering your score. Keep them open, even with a $0 balance."}
+    ],
+    body:`<p>Most people ignore their credit score until they need it — a mortgage, car loan, apartment. By then it's too late to improve it. Understanding how it's built lets you optimize proactively.</p>
+    <h4>The five FICO factors</h4>
+    <ul>
+      <li><strong>Payment history (35%):</strong> One missed payment drops your score 60–110 points and stays 7 years. Autopay everything.</li>
+      <li><strong>Credit utilization (30%):</strong> Balance ÷ limit. Under 30% okay; under 10% excellent. Updates monthly.</li>
+      <li><strong>Length of history (15%):</strong> Average age of all accounts. Don't close old cards.</li>
+      <li><strong>Credit mix (10%):</strong> Having both cards and installment loans helps.</li>
+      <li><strong>New credit (10%):</strong> Each application is a ~5-point hard inquiry drop.</li>
+    </ul>
+    <h4>Score ranges</h4>
+    <ul>
+      <li><strong>800–850:</strong> Exceptional — best rates everywhere</li>
+      <li><strong>740–799:</strong> Very Good — near-best rates</li>
+      <li><strong>670–739:</strong> Good — average rates</li>
+      <li><strong>Below 670:</strong> Fair/Poor — higher costs, possible denials</li>
+    </ul>
+    <h4>The real cost</h4>
+    <p>On a $400,000 30-year mortgage, the gap between a 620 and 760 score can be ~$270/month — over $97,000 over the life of the loan.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Become an authorized user on a parent's old credit card. Their account history adds to your file — giving you years of credit history before you even apply for anything.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Get a starter card. Use it for one recurring purchase per month. Pay the full balance every month. In 12–18 months you'll have a solid score.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Before applying for a mortgage, check your full report at AnnualCreditReport.com for errors. Disputing inaccuracies is free and can lift your score meaningfully.</p></div>
+    <div class="tip">💡 Action step: Get your free credit report at AnnualCreditReport.com. Review all three bureaus. Dispute anything incorrect — errors are more common than you'd expect.</div>`
+  },
+  {
+    tag:"credit",tagLabel:"Credit",readMins:4,
+    title:"Good Debt vs. Bad Debt",
+    summary:"Debt is a tool. Used right it builds wealth. Used carelessly it quietly extracts it for years.",
+    quiz:[
+      {q:"Which of these is typically considered 'good debt'?",opts:["Credit card balance at 22% APR","Payday loan","Fixed-rate mortgage at 6.5%","Buy Now Pay Later for clothes"],ans:2,exp:"A mortgage finances an appreciating asset at a relatively low, fixed rate with a clear payoff plan. That's the definition of good debt — it can build wealth over time."},
+      {q:"What is the 'Avalanche' debt payoff method?",opts:["Pay off the smallest balance first","Pay equal amounts to all debts","Pay minimums on everything, then attack highest-interest debt","Pay off secured debts before unsecured"],ans:2,exp:"The avalanche method targets highest-interest debt first (after paying minimums on all others). It saves the most money mathematically and is optimal for anyone who can stay disciplined."},
+      {q:"A $5,000 credit card at 24% APR — at what interest rate would it make more sense to invest extra cash than to pay it off early?",opts:["Any rate above 5%","Any rate above 24%","Any rate above 10%","You should always pay off debt first"],ans:1,exp:"If you can reliably earn more than 24% in investments, investing beats paying down the debt. But 24% is extremely hard to beat — almost always pay off high-interest debt first."}
+    ],
+    body:`<p>People either avoid all debt or use it recklessly. Both extremes cost money. The goal is knowing when debt is leverage and when it's a trap.</p>
+    <h4>Good debt</h4>
+    <ul>
+      <li>Low interest rate</li>
+      <li>Funds something that appreciates or increases earning power</li>
+      <li>Has a clear payoff plan</li>
+    </ul>
+    <p>Examples: mortgage, student loans for a high-ROI degree, a business loan generating more than it costs.</p>
+    <h4>Bad debt</h4>
+    <ul>
+      <li>High interest rate (above 7–8%)</li>
+      <li>Funds consumption — things that disappear or depreciate</li>
+    </ul>
+    <p>Examples: credit cards at 20–29% APR, payday loans (300–400% effective APR), high-rate car loans.</p>
+    <h4>The two payoff strategies</h4>
+    <ul>
+      <li><strong>Avalanche:</strong> Attack highest-interest debt first. Saves the most money.</li>
+      <li><strong>Snowball:</strong> Attack smallest balance first. Costs more but psychological wins keep people going.</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Student loans often carry 4–7% interest. Don't panic-pay them if a retirement account earns more. Calculate: if the rate is below 6%, investing may win. Above 7%, pay it aggressively.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>The mortgage question looms large. Historically the stock market returns more than a 6–7% mortgage rate over long periods. Run the math for your specific rate.</p></div>
+    <div class="tip">💡 Action step: List every debt — balance, minimum payment, interest rate. Sort by rate. Even $50 extra per month on your highest-rate debt can cut years off your payoff.</div>`
+  },
+  {
+    tag:"taxes",tagLabel:"Taxes",readMins:5,
+    title:"Tax Brackets Explained",
+    summary:"You're not taxed your top rate on all income — only on each slice above the threshold. Most people get this wrong.",
+    quiz:[
+      {q:"If you earn $80,000 and are in the 22% tax bracket, do you pay 22% on all $80,000?",opts:["Yes — that's what a tax bracket means","No — you only pay 22% on the income above the 22% threshold","It depends on your state","Yes, but you get deductions first"],ans:1,exp:"The US uses a progressive system. You pay 10% on the first slice, 12% on the next, and only 22% on the portion above $47,150. Your effective (actual average) rate ends up around 16%."},
+      {q:"What is the standard deduction for a single filer in 2024?",opts:["$6,000","$10,000","$14,600","$20,000"],ans:2,exp:"The standard deduction is $14,600 for single filers in 2024. This reduces your taxable income before brackets even apply. A $60,000 earner's taxable income becomes just $45,400."},
+      {q:"How are long-term capital gains (investments held 1+ year) taxed compared to ordinary income?",opts:["At exactly the same rate","At a higher rate","At 0%, 15%, or 20% — lower than ordinary income rates","They're not taxed at all"],ans:2,exp:"Long-term capital gains are taxed at preferential rates of 0%, 15%, or 20% depending on your income — significantly lower than ordinary income rates. This is why holding investments for over a year matters."}
+    ],
+    body:`<p>One of the most persistent financial myths: "If I get a raise and move into a higher tax bracket, I'll take home less." This is completely false.</p>
+    <h4>How marginal brackets actually work</h4>
+    <p>You pay different rates on different <em>slices</em> of income — not one flat rate on everything. 2024 single filer brackets (approximate):</p>
+    <ul>
+      <li>10% on income $0–$11,600</li>
+      <li>12% on $11,601–$47,150</li>
+      <li>22% on $47,151–$100,525</li>
+      <li>24%, 32%, 35%, 37% above that</li>
+    </ul>
+    <p>Earning $80,000 means paying 22% only on the slice above $47,150. Effective rate ends up around 16%.</p>
+    <h4>Reducing taxable income</h4>
+    <p>Before brackets apply, income is reduced by the standard deduction ($14,600 in 2024). Every $1 in a traditional 401k reduces taxable income by $1.</p>
+    <h4>Capital gains — a separate, better system</h4>
+    <ul>
+      <li><strong>Short-term gains</strong> (under 1 year): taxed as ordinary income (up to 37%)</li>
+      <li><strong>Long-term gains</strong> (over 1 year): 0%, 15%, or 20% — dramatically lower</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Your first paycheck will look smaller than expected — taxes, Social Security, and Medicare all come out. Learn to calculate your actual take-home from your hourly rate before spending.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Every dollar in a traditional 401k reduces taxable income at your marginal rate. A $1,000 contribution in the 22% bracket only costs you $780 out of pocket.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Consider tax-diversification: have some money in traditional (pre-tax) AND Roth (after-tax) accounts. Future tax rates are unknown — having both gives you flexibility.</p></div>
+    <div class="tip">💡 Action step: Use the IRS Tax Withholding Estimator to check if you're over- or under-withholding. A large refund means you gave the government an interest-free loan all year.</div>`
+  },
+  {
+    tag:"insurance",tagLabel:"Insurance",readMins:5,
+    title:"Insurance Basics You Actually Need",
+    summary:"Insurance isn't exciting. But one missed policy at the wrong moment can wipe out years of wealth-building in a day.",
+    quiz:[
+      {q:"What is a deductible?",opts:["Your monthly insurance premium","The maximum your insurer will ever pay","The amount you pay out-of-pocket before insurance kicks in","A penalty for canceling your policy"],ans:2,exp:"A deductible is what you pay first before your insurance covers the rest. A $1,000 deductible means you pay the first $1,000 of any claim; your insurer covers beyond that."},
+      {q:"Which type of life insurance is typically recommended for most people in their 20s–30s?",opts:["Whole life insurance","Term life insurance","Universal life insurance","Variable life insurance"],ans:1,exp:"Term life insurance provides coverage for a fixed period (10–30 years) at much lower cost than permanent life policies. For most people, term insurance plus investing the difference beats whole life."},
+      {q:"What is an HSA (Health Savings Account)?",opts:["A type of health insurance plan","A tax-advantaged account for medical expenses, available with high-deductible health plans","A government insurance subsidy","A flexible spending account"],ans:1,exp:"An HSA is a triple-tax-advantaged account: contributions are pre-tax, growth is tax-free, and withdrawals for medical expenses are tax-free. After 65, you can withdraw for any purpose (just pay income tax, like a 401k)."}
+    ],
+    body:`<p>Insurance is the part of personal finance nobody wants to think about — until they need it. The goal isn't to spend as much as possible; it's to cover risks you genuinely can't afford to absorb yourself.</p>
+    <h4>The ones you need</h4>
+    <ul>
+      <li><strong>Health insurance:</strong> Non-negotiable. One ER visit without it can cost $10,000–$30,000. If your employer offers it, use it. If not, check healthcare.gov.</li>
+      <li><strong>Renters/homeowners insurance:</strong> Renters insurance costs $15–30/month and covers your possessions, liability, and displacement. One of the best dollar-for-dollar value purchases available.</li>
+      <li><strong>Auto insurance:</strong> Required by law in most states. Liability covers damage to others; collision/comprehensive covers your car.</li>
+      <li><strong>Term life insurance:</strong> Only if people depend on your income. A 20-year term policy for a healthy 30-year-old costs $25–40/month. Skip expensive whole life policies.</li>
+      <li><strong>Disability insurance:</strong> Often overlooked. You're far more likely to be disabled than to die during your working years. If your employer offers it, take it. Long-term disability replaces 60% of income.</li>
+    </ul>
+    <h4>The ones you probably don't need</h4>
+    <ul>
+      <li>Extended warranties on appliances (save that money in your emergency fund)</li>
+      <li>Whole/universal life insurance if you're young and healthy with no dependents</li>
+      <li>Credit card payment protection insurance</li>
+      <li>Gap insurance on used cars with no loan</li>
+    </ul>
+    <h4>The HSA — a hidden wealth-building tool</h4>
+    <p>If your employer offers a high-deductible health plan (HDHP), you can open an HSA. It's triple tax-advantaged: contributions are pre-tax, growth is tax-free, and withdrawals for medical expenses are tax-free. After 65, it effectively becomes a second traditional IRA.</p>
+    <h4>How to think about coverage amounts</h4>
+    <p>The rule of thumb: insure against things you genuinely cannot afford to pay out-of-pocket. If you have a $10,000 emergency fund, a $1,000 deductible is fine. If you have $500 in savings, consider a lower deductible on critical policies.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>You're likely on your parents' health insurance until 26. When that ends, don't go uninsured — even for a month. Check employer options or healthcare.gov. One accident uncovered can take years to recover from financially.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Renters insurance first — it's cheap and covers far more than people realize. Then make sure you have health coverage. If your employer offers disability insurance, accept it without overthinking.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>If you have dependents (kids, a partner who relies on your income), term life insurance becomes critical. Review your coverage annually — life changes fast in your 30s.</p></div>
+    <div class="tip">💡 Action step: Check if you have renters insurance. If not, get a quote online — it takes 10 minutes and costs less than most streaming subscriptions. This is one of the most under-utilized protections available.</div>`
+  },
+  {
+    tag:"income",tagLabel:"Income",readMins:5,
+    title:"Salary Negotiation",
+    summary:"Negotiating your salary is the highest-ROI financial move most people never make. One conversation can compound into hundreds of thousands over a career.",
+    quiz:[
+      {q:"You receive a job offer for $65,000. You believe market rate is $72,000. What should you do?",opts:["Accept immediately — you don't want to seem greedy","Ask if there's any flexibility and counter at $74,000–$76,000","Only negotiate if you have another offer","Never negotiate a first offer — save it for your first review"],ans:1,exp:"Counteroffering is expected and professional. Asking for $74–76k gives room to meet in the middle at $72k. Employers almost never rescind offers for professional negotiation."},
+      {q:"What's the best time to negotiate a raise at your current job?",opts:["After a major personal expense","When you're considering quitting","After a visible success or before review season","On your 1-year anniversary automatically"],ans:2,exp:"Negotiate when your value is most visible — right after delivering results, solving a big problem, or securing a new client. Before annual review season means your manager has time to build your case."},
+      {q:"Which is generally the most effective strategy in salary negotiation?",opts:["Give a range with your target at the bottom","Name a specific number slightly above your target","Say 'whatever is fair'","Let the employer always make the first offer"],ans:1,exp:"Giving a specific number (slightly above your actual target) anchors the negotiation. Ranges are dangerous — employers hear the lower number. 'Whatever is fair' gives away all leverage."}
+    ],
+    body:`<p>Most people accept the first salary offer they receive. This is one of the most expensive financial habits you can have — because raises are typically percentages of your base salary, every dollar you leave on the table today compounds for decades.</p>
+    <h4>Why most people don't negotiate</h4>
+    <p>Fear of seeming greedy. Fear of the offer being rescinded. Not knowing what to say. The truth: negotiation is expected. Hiring managers budget for it. An employer almost never withdraws an offer because a candidate professionally asked for more.</p>
+    <h4>How to research your market rate</h4>
+    <ul>
+      <li>Glassdoor, Levels.fyi (tech), LinkedIn Salary, Bureau of Labor Statistics</li>
+      <li>Talk to recruiters — they know market rates and share them freely</li>
+      <li>Ask peers in the same field. More people are sharing salary data than ever.</li>
+    </ul>
+    <h4>The negotiation script</h4>
+    <p>Keep it simple: <em>"Thank you so much — I'm really excited about this role. Based on my research and experience, I was expecting something closer to [X]. Is there flexibility there?"</em> Then stop talking. Silence is your friend.</p>
+    <h4>Beyond base salary</h4>
+    <ul>
+      <li><strong>Signing bonus:</strong> Often easier to get than a higher base, since it's a one-time cost</li>
+      <li><strong>Remote work:</strong> Worth $5,000–10,000+/year in commuting and lifestyle costs</li>
+      <li><strong>Extra PTO:</strong> Ask if it's not budgeted</li>
+      <li><strong>401k match:</strong> Confirm the vesting schedule — it affects your real compensation</li>
+      <li><strong>Equity/RSUs:</strong> Understand the vesting, cliff, and strike price before valuing them</li>
+    </ul>
+    <h4>The compounding effect</h4>
+    <p>If you negotiate $5,000 more in salary today, and your employer gives raises as percentages, in 10 years that single negotiation is worth far more than $50,000 in cumulative extra earnings. It multiplies.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Even with your first part-time job, practice asking. "Is there any flexibility on the starting rate?" said confidently costs nothing and sometimes works. The habit of asking matters more than the outcome early on.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Your first "real" job salary anchors every future offer. Do your research, counter confidently, and don't let imposter syndrome cost you thousands. The worst they can say is no — and they almost never do.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>If you haven't had a raise in 12–18 months, it's time to ask. Document your accomplishments, research market rate, and have the conversation. "I've been here 2 years and delivered X, Y, Z — I'd like to discuss aligning my comp with market rate" is a complete script.</p></div>
+    <div class="tip">💡 Action step: Look up your role on Glassdoor and LinkedIn Salary right now. If your current compensation is below median, you have data. Save the screenshots and schedule a meeting with your manager.</div>`
+  },
+  {
+    tag:"mindset",tagLabel:"Mindset",readMins:4,
+    title:"Pay Yourself First",
+    summary:"Save before you spend — not after. This single automated habit builds more wealth for ordinary people than any investment strategy.",
+    quiz:[
+      {q:"What does 'Pay Yourself First' mean?",opts:["Spend on yourself before paying bills","Move money to savings immediately on payday before spending anything","Pay yourself a salary from your business first","Negotiate for a raise before investing"],ans:1,exp:"Pay yourself first means treating saving as a non-negotiable bill paid before any discretionary spending. The money moves before you can spend it — removing the need for willpower."},
+      {q:"What is the 'Save More Tomorrow' strategy?",opts:["Start saving for retirement at 40, not 20","Increase your savings rate by 1% every 6 months or with each raise","Save only in years when you earn more","Invest only when the market is low"],ans:1,exp:"Increasing your savings rate by small increments over time is nearly painless. You barely notice 1% changes — but they compound into dramatically higher savings rates over years."},
+      {q:"Someone earns $4,000/month and auto-transfers $600 to savings on payday. How much do they learn to live on?",opts:["$4,000","$3,400","$600","It varies every month"],ans:1,exp:"When money is automatically redirected before it hits your spending account, your brain adapts to the remaining amount within weeks. You don't miss money you never 'had.'"}
+    ],
+    body:`<p>Almost everyone intends to save what's left over at month's end. There is never anything left over. Expenses expand to fill available income. Pay yourself first flips this entirely.</p>
+    <h4>The psychology</h4>
+    <p>When money never hits your spending account, your brain adapts to the reduced amount within weeks. A person who auto-transfers $500 to savings on payday adjusts to $3,500 in spending. A person who tries to save $500 at month-end almost never manages it consistently.</p>
+    <h4>How to automate it</h4>
+    <ul>
+      <li><strong>401k:</strong> Set your contribution percentage — it's removed pre-paycheck automatically.</li>
+      <li><strong>Roth IRA:</strong> Set up automatic monthly transfer on the 1st of the month.</li>
+      <li><strong>Savings goals:</strong> Separate HYSA accounts for each goal, auto-transferred on payday.</li>
+    </ul>
+    <h4>The Save More Tomorrow approach</h4>
+    <p>Increase your savings rate by 1% every 6 months or with every raise. The increments are small enough that they don't feel painful — but they add up significantly over years.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Every paycheck: put 20% somewhere before spending. Even a regular savings account. You're building the reflex of prioritizing future-you over present-you.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Start at whatever rate feels sustainable — even 5%. Increase by 1% every six months. The growth in both income and savings rate compounds together.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Life is more expensive now. Don't pause savings "temporarily." Even a 2-year pause in your 30s can mean hundreds of thousands less at retirement.</p></div>
+    <div class="tip">💡 Action step: Right now — increase your 401k contribution by 1%. Then set up one automatic savings transfer, even $25/month. The habit matters more than the amount.</div>`
+  },
+  {
+    tag:"mindset",tagLabel:"Mindset",readMins:4,
+    title:"Lifestyle Inflation",
+    summary:"Spending more as you earn more is the silent wealth killer. High earners go broke this way — not through recklessness, but through small upgrades that accumulate.",
+    quiz:[
+      {q:"What is lifestyle inflation?",opts:["Prices going up due to general inflation","Spending automatically increasing as income rises","Taking on debt to fund a better lifestyle","Upgrading your home once",""],ans:1,exp:"Lifestyle inflation (or 'lifestyle creep') is the pattern of spending rising automatically to match income increases. It's why many high earners feel financially stuck despite good salaries."},
+      {q:"Someone earns $60k saving 20% ($12k/year). They get promoted to $100k but only save 8% ($8k/year). What happened?",opts:["They're building significantly more wealth","They're building slightly more wealth","They're building less wealth than before the raise","They broke even"],ans:2,exp:"Despite earning $40,000 more per year, they're actually saving less in dollar terms ($8k vs $12k). Every extra dollar went to lifestyle. The raise made their life nicer but not more financially secure."},
+      {q:"What is the 'raise rule' for fighting lifestyle inflation?",opts:["Save 100% of every raise","Never upgrade your lifestyle after a raise","Allocate at least 50% of any raise increase to savings before spending any of it","Celebrate every raise with a major purchase"],ans:2,exp:"Capturing 50% of each raise for savings means you still enjoy a real lifestyle improvement — just not all of it. And the savings portion compounds over time."}
+    ],
+    body:`<p>Lifestyle inflation is why people earning $150,000 can feel just as financially stressed as people earning $50,000 — and why many high earners arrive at retirement with little saved.</p>
+    <h4>How it happens invisibly</h4>
+    <p>Nobody decides to become wasteful. It's dozens of small reasonable-seeming upgrades: nicer apartment after the raise, car that fits the new neighborhood, more dinners out, newer phone. Each makes sense in isolation. Together they consume every extra dollar.</p>
+    <h4>The numbers</h4>
+    <p>Someone earning $60k saving 20% ($12k/year) builds real wealth. That same person promoted to $100k but saving only 8% ($8k/year) is building less wealth than before — despite earning $40,000 more.</p>
+    <h4>What research says makes people happy</h4>
+    <ul>
+      <li>Experiences generate more lasting satisfaction than possessions</li>
+      <li>Buying back time (outsourcing tasks you hate) has high happiness return per dollar</li>
+      <li>Most material upgrades feel normal within 3 months (hedonic adaptation)</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Your first real salary feels like abundance. Don't immediately upgrade your life to match it. Live like a student for one more year and invest the difference. That year alone can compound into $100,000+ by retirement.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Implement the raise rule: commit 50% of the after-tax increase to savings before any lifestyle upgrade. You still enjoy a real raise — just not all of it at once.</p></div>
+    <div class="tip">💡 Action step: After your next raise, increase your 401k or auto-savings contribution within 24 hours — before you adjust your spending baseline. That window matters.</div>`
+  },
+  {
+    tag:"mindset",tagLabel:"Mindset",readMins:5,
+    title:"The Psychology of Money",
+    summary:"Your relationship with money was shaped by where and when you grew up. Understanding that changes how you make decisions.",
+    quiz:[
+      {q:"What is 'recency bias' in investing?",opts:["Preferring new investments over old ones","Overweighting recent events when making decisions (e.g., selling after a crash)","Only reading recent financial news","Investing based on trends"],ans:1,exp:"Recency bias causes investors to become risk-averse after crashes (when they should buy) and reckless after booms (when they should be cautious). A written plan you follow regardless of market conditions is the antidote."},
+      {q:"According to research, loss aversion means the pain of losing $1,000 feels approximately how intense compared to gaining $1,000?",opts:["About the same","Twice as painful","Half as painful","Three times as painful"],ans:1,exp:"Kahneman and Tversky's research shows losses feel about twice as painful as equivalent gains feel good. This causes investors to sell at market bottoms and hold losers too long — both wealth-destroying behaviors."},
+      {q:"What's the difference between being 'rich' and being 'wealthy'?",opts:["Rich means more money; wealthy means more assets","Rich is visible (cars, houses, status); wealth is invisible (investments, options, freedom)","There is no difference","Wealth is inherited; rich is earned"],ans:1,exp:"Rich is what people display. Wealth is what they have. Many visibly rich people are heavily in debt. True financial freedom comes from building invisible wealth — quietly, consistently — not from displaying richness."}
+    ],
+    body:`<p>Financial success is less about intelligence than behavior — and behavior is driven by deeply personal, often irrational forces.</p>
+    <h4>Why smart people make terrible financial decisions</h4>
+    <p>Your money beliefs were formed by early experiences. Someone who grew up during a recession develops a very different relationship with cash than someone who came of age during a bull market. Neither is objectively correct — but both persist long after those circumstances changed.</p>
+    <h4>Recency bias</h4>
+    <p>We dramatically overweight recent events. After a crash, we become risk-averse exactly when we should be buying. After a boom, we take excessive risks exactly when caution is warranted. The antidote isn't immunity — it's a written investment plan you follow regardless of how markets feel right now.</p>
+    <h4>Loss aversion</h4>
+    <p>The pain of losing $1,000 is roughly twice as intense as the joy of gaining $1,000. This leads investors to sell at market bottoms and hold too long. Both are wealth-destroying behaviors that feel entirely rational in the moment.</p>
+    <h4>Wealth vs. Rich</h4>
+    <p>Rich is visible: the car, the house, the clothes. Wealth is invisible: the investment account, the options you have, the freedom to say no. Building invisible wealth — quietly, consistently — is the actual goal.</p>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're building momentum</strong><p>Everyone appears to be doing better than you. Most aren't — they're in debt to look the part. The most financially successful people your age are quietly investing in boring index funds and don't post about it.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Define what "enough" looks like before lifestyle inflation defines it for you. Concrete targets prevent the goalposts from perpetually shifting.</p></div>
+    <div class="tip">💡 Action step: Write down your "enough" number — what monthly income would feel free? What savings balance would let you sleep at night? Having a target changes daily tradeoffs.</div>`
+  },
+
+  // ── NEW LESSONS ──────────────────────────────────────────────
+
+  {
+    tag:"insurance",tagLabel:"Insurance",readMins:5,
+    title:"Insurance Basics: What You Actually Need",
+    summary:"Insurance isn't a scam — it's protection against the financial events that would otherwise wreck everything you've built.",
+    quiz:[
+      {q:"What is a deductible?",opts:["Your monthly premium payment","The amount you pay out-of-pocket before insurance kicks in","Your maximum out-of-pocket limit","The insurance company's profit"],ans:1,exp:"The deductible is what you pay first before insurance covers costs. A $1,000 deductible means you pay the first $1,000 of a claim; insurance covers the rest up to your policy limits."},
+      {q:"Which type of insurance is most critical for someone in their 20s with no dependents?",opts:["Life insurance","Renter's/homeowner's insurance and health insurance","Long-term care insurance","Pet insurance"],ans:1,exp:"Health insurance protects against catastrophic medical costs (a hospital stay can cost $30,000+). Renter's insurance is cheap (~$15/month) and covers your belongings and liability. Life insurance matters mainly when others depend on your income."},
+      {q:"What does 'term life insurance' mean?",opts:["Insurance that lasts your entire life","Insurance that covers only certain medical conditions","Coverage for a fixed period (e.g., 20 years) at a locked-in rate","Insurance with a cash value component"],ans:2,exp:"Term life covers you for a set period — typically 20 or 30 years — at a fixed monthly premium. It's the most affordable and appropriate type for most people. Whole life insurance is much more expensive and rarely recommended for most situations."}
+    ],
+    body:`<p>Most people are either over-insured (paying for things they don't need) or dangerously under-insured (one bad event from financial ruin). The goal isn't to buy every policy — it's to cover the risks that would truly wipe you out.</p>
+    <h4>The insurance you likely need</h4>
+    <ul>
+      <li><strong>Health insurance:</strong> Non-negotiable. A single ER visit can cost $3,000–$30,000+. If your employer offers it, enroll immediately. If not, use the Healthcare.gov marketplace. Subsidies may make it cheaper than you think.</li>
+      <li><strong>Renter's or homeowner's insurance:</strong> If you rent, renter's insurance costs ~$10–$20/month and covers your belongings plus liability if someone gets hurt in your home. It's one of the best deals in personal finance.</li>
+      <li><strong>Auto insurance:</strong> Required by law. At minimum, carry liability coverage. If your car has significant value, add collision and comprehensive.</li>
+      <li><strong>Disability insurance:</strong> Overlooked by most. If you can't work, how do you pay rent? Your employer may offer short/long-term disability — check. This protects your income more directly than life insurance does.</li>
+    </ul>
+    <h4>The insurance most people don't need yet</h4>
+    <ul>
+      <li><strong>Life insurance:</strong> Only necessary if others depend on your income (a spouse, children, or someone you support financially). If you have no dependents, skip it for now.</li>
+      <li><strong>Whole life / universal life:</strong> Almost always overpriced as an investment vehicle. If you need life insurance, term insurance is almost always the better choice.</li>
+    </ul>
+    <h4>Key terms to understand</h4>
+    <ul>
+      <li><strong>Premium:</strong> Your monthly or annual payment to maintain coverage.</li>
+      <li><strong>Deductible:</strong> What you pay first before insurance covers the rest.</li>
+      <li><strong>Out-of-pocket maximum:</strong> The most you'll ever pay in a year. After this, insurance covers 100%.</li>
+      <li><strong>Copay:</strong> Fixed fee per visit or service (e.g., $30 for a doctor visit).</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>You're likely on a parent's health plan until 26 — check if you still qualify. Get renter's insurance the moment you move out on your own. At ~$15/month, it's one of the cheapest forms of protection available.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>When you get your first job offer, review the benefits package carefully. Health insurance, dental, vision, and disability coverage are part of your total compensation. A job with strong benefits is worth real money — factor it in.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>With a mortgage, kids, or a spouse depending on you, life insurance becomes essential. A 20-year term life policy for a healthy 32-year-old typically costs $25–$40/month for $500,000 in coverage. Lock in rates while you're young and healthy.</p></div>
+    <div class="tip">💡 Action step: Review your current insurance coverage. Do you have renter's or homeowner's insurance? Check your health insurance out-of-pocket maximum — if you had a $20,000 medical event tomorrow, would you be okay?</div>`
+  },
+
+  {
+    tag:"insurance",tagLabel:"Insurance",readMins:4,
+    title:"Health Savings Accounts (HSAs)",
+    summary:"The most tax-advantaged account most people have never heard of. Triple tax benefits — and the money rolls over forever.",
+    quiz:[
+      {q:"What is the 'triple tax advantage' of an HSA?",opts:["You pay no taxes at any point ever","Contributions are pre-tax, growth is tax-free, and withdrawals for medical expenses are tax-free","You get a triple match from your employer","HSAs are exempt from all state and federal taxes"],ans:1,exp:"HSAs offer three tax benefits: contributions reduce your taxable income, the money grows tax-free, and withdrawals for qualified medical expenses are never taxed. No other account offers all three."},
+      {q:"What happens to unused HSA funds at the end of the year?",opts:["They expire","They roll over indefinitely","They convert to taxable income","They return to your employer"],ans:1,exp:"Unlike FSAs (Flexible Spending Accounts), HSA funds roll over year after year with no deadline. You can build a significant balance over time."},
+      {q:"Who can open an HSA?",opts:["Anyone with any health insurance","Anyone enrolled in a High-Deductible Health Plan (HDHP)","Only people over 55","Only employees with employer-sponsored insurance"],ans:1,exp:"You must be enrolled in a qualifying High-Deductible Health Plan (HDHP) to contribute to an HSA. HDHPs typically have lower premiums but higher deductibles — the HSA helps cover those deductibles tax-free."}
+    ],
+    body:`<p>A Health Savings Account (HSA) is arguably the most powerful tax-advantaged account available — yet most people either don't know about it or leave it sitting unused as a simple debit card for doctor copays. Used strategically, it can become a serious wealth-building tool.</p>
+    <h4>The triple tax advantage</h4>
+    <ul>
+      <li><strong>Contributions are pre-tax:</strong> Every dollar you put in reduces your taxable income — just like a 401k. 2025 limits: $4,300 (individual) / $8,550 (family).</li>
+      <li><strong>Growth is tax-free:</strong> Once your HSA balance exceeds ~$1,000–$2,000 (check your provider's threshold), you can invest it in index funds. It grows completely tax-free.</li>
+      <li><strong>Withdrawals for medical expenses are tax-free:</strong> Use it for qualified medical expenses and you pay nothing — ever. No other account gives you all three benefits.</li>
+    </ul>
+    <h4>The stealth retirement strategy</h4>
+    <p>Here's the advanced move: pay your medical expenses out-of-pocket now (if you can afford to) and let your HSA grow invested. Keep every medical receipt. Years later — even decades later — you can reimburse yourself tax-free for those old expenses. There's no time limit on reimbursements.</p>
+    <p>After age 65, HSA withdrawals for non-medical expenses are taxed as ordinary income — exactly like a traditional IRA. So worst case, it becomes another retirement account.</p>
+    <h4>HSA vs. FSA — the key difference</h4>
+    <ul>
+      <li><strong>HSA:</strong> Rolls over forever. Tied to your HDHP insurance. Portable — you keep it if you change jobs.</li>
+      <li><strong>FSA (Flexible Spending Account):</strong> "Use it or lose it" by year-end. Available with any employer health plan. Not portable.</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>If your employer offers an HDHP option, compare the premiums carefully. If you're healthy and rarely see doctors, an HDHP + HSA can save you money on premiums while building a tax-free medical fund. Invest the HSA rather than spending it.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Max out your HSA every year and invest it. Treat it as a fourth retirement account after your 401k match, Roth IRA, and 401k max. Healthcare costs in retirement are one of the biggest unknowns — a large HSA balance is one of the best hedges.</p></div>
+    <div class="tip">💡 Action step: Check if your health plan qualifies as an HDHP. If so, open and fund an HSA immediately. Then look for the option to invest your balance — most HSA providers offer it but it's not always turned on by default.</div>`
+  },
+
+  {
+    tag:"income",tagLabel:"Income",readMins:5,
+    title:"Salary Negotiation",
+    summary:"Negotiating your salary is the highest-ROI financial move most people never make. One conversation can be worth $500,000+ over a career.",
+    quiz:[
+      {q:"When asked 'What's your current salary?' during a job interview, what's the best approach?",opts:["Always answer honestly","Deflect with 'I'd prefer to focus on the value I bring and your budget for this role'","Add 20% to whatever you're currently making","Refuse to answer entirely"],ans:1,exp:"Many states have laws preventing employers from requiring you to share current salary. Deflecting refocuses the conversation on your value and their budget — not anchoring to your current (possibly underpaid) number."},
+      {q:"What's the best time to negotiate salary?",opts:["During your first week on the job","After receiving a written offer, before accepting","During your annual review only","When you're about to quit"],ans:1,exp:"The moment between receiving and accepting an offer is when you have maximum leverage. The employer has already decided they want you. Once you accept, your leverage significantly decreases."},
+      {q:"If an employer says 'the budget is firm,' what's a good next step?",opts:["Accept the number","Walk away immediately","Negotiate other benefits: signing bonus, extra PTO, remote work, equity, earlier review","Ask to speak to the CEO"],ans:2,exp:"Total compensation is more than salary. A $5,000 signing bonus, one extra week of PTO, or a 6-month review instead of 12-month can add real value when the base salary can't move."}
+    ],
+    body:`<p>Most people accept the first offer they receive. Most employers expect negotiation. That gap — between what you accept and what you could have asked for — compounds over an entire career into a genuinely life-changing sum.</p>
+    <h4>Why negotiation is so important</h4>
+    <p>A $5,000 salary difference negotiated at your first job doesn't just mean $5,000 more per year. Future raises, bonuses, and 401k matches are often calculated as percentages of your base. Over 30 years, that single negotiation can realistically be worth $200,000–$500,000+.</p>
+    <h4>How to find your market value</h4>
+    <ul>
+      <li><strong>Glassdoor, Levels.fyi (tech), LinkedIn Salary:</strong> Search your title, location, and experience level.</li>
+      <li><strong>Ask colleagues:</strong> Salary transparency conversations are increasingly normalized and legal in most states.</li>
+      <li><strong>Bureau of Labor Statistics (bls.gov):</strong> Free, government-sourced salary data by occupation and region.</li>
+    </ul>
+    <h4>The negotiation script</h4>
+    <p>When you get the offer: "Thank you — I'm really excited about this opportunity. Based on my research and the value I'd bring, I was expecting something closer to [X]. Is there flexibility there?"</p>
+    <p>That's it. You don't need to over-explain. Silence after asking is normal — let them respond.</p>
+    <h4>What to negotiate beyond salary</h4>
+    <ul>
+      <li>Signing bonus (often easier to approve than base salary increases)</li>
+      <li>Extra PTO or flexible work</li>
+      <li>Earlier performance review (6 months instead of 12)</li>
+      <li>Remote work days</li>
+      <li>Professional development budget</li>
+      <li>Equity or stock options</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Even negotiating $1/hour more on a part-time job builds the habit and confidence. Start small. The skill compounds just like money does.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Your first "real job" offer is where it matters most. Don't anchor to your previous internship or part-time wage. Research market rate for your role, city, and experience. Most hiring managers expect negotiation and won't rescind offers for asking professionally.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Job changes (not just promotions) are the fastest way to increase salary. Internal raises average 3–5%/year; switching jobs often yields 10–20% increases. Every few years, benchmark your salary against the market and act accordingly.</p></div>
+    <div class="tip">💡 Action step: Look up your job title on Glassdoor and LinkedIn Salary right now. If you're below market rate by 10%+, that's a priority conversation to have — whether with your current employer or by exploring what's out there.</div>`
+  },
+
+  {
+    tag:"income",tagLabel:"Income",readMins:4,
+    title:"Building a Side Income",
+    summary:"A second income stream changes the math on everything — debt payoff, savings rate, and how fast you reach financial goals.",
+    quiz:[
+      {q:"What is a '1099 worker'?",opts:["A full-time employee with benefits","A freelancer or contractor who receives a 1099 tax form and pays their own taxes","Someone earning over $100,000/year","A government employee"],ans:1,exp:"1099 workers are self-employed freelancers or contractors. Unlike W-2 employees, taxes aren't withheld — you're responsible for setting aside and paying self-employment taxes (15.3% on net income) plus income tax."},
+      {q:"What should you do with side income tax obligations?",opts:["Ignore them until tax season","Set aside ~25–30% of each payment for taxes in a separate account","Report only income over $10,000","Pay taxes once a year"],ans:1,exp:"Self-employment income is not withheld automatically. You're typically required to pay quarterly estimated taxes. A common rule: set aside 25–30% of each payment immediately so you're never caught short at tax time."},
+      {q:"Which is generally more scalable — trading time for money, or selling something that can run without you?",opts:["Trading time (freelancing, consulting)","Selling a product, course, or template that sells passively","They're equally scalable","Neither is scalable"],ans:1,exp:"Freelancing and consulting trade hours for income — there's a ceiling based on your time. Digital products, online courses, templates, or rental income can generate revenue without requiring you to do additional work for each sale."}
+    ],
+    body:`<p>Your primary job has a ceiling — there are only so many hours and so much room to grow. A side income breaks that ceiling. Even $500–$1,000/month from a second stream changes the math on debt payoff, savings, and financial goals significantly.</p>
+    <h4>Two types of side income</h4>
+    <ul>
+      <li><strong>Active income:</strong> You trade time for money. Freelancing, tutoring, consulting, driving, delivery. High startup speed, limited by your hours.</li>
+      <li><strong>Passive income:</strong> Income that runs without your direct time. Rental income, digital products, online courses, royalties, dividend investing. Slower to build, but not capped by your time.</li>
+    </ul>
+    <h4>Realistic starting points</h4>
+    <ul>
+      <li><strong>Freelancing your main skill:</strong> If you write, code, design, or do marketing professionally, those same skills pay well as freelance work. Upwork, Fiverr, and LinkedIn are entry points.</li>
+      <li><strong>Tutoring:</strong> Tutors earn $25–$100+/hour. Platforms: Wyzant, Tutor.com, or local word-of-mouth. Math, SAT prep, and STEM subjects are in high demand.</li>
+      <li><strong>Selling digital products:</strong> Templates, preset packs, study guides, Notion dashboards. Create once, sell repeatedly. Etsy and Gumroad are accessible platforms.</li>
+      <li><strong>Content creation:</strong> Slower to monetize but scalable. YouTube, newsletters, and social media can generate ad revenue, sponsorships, or affiliate income over time.</li>
+    </ul>
+    <h4>The tax reality</h4>
+    <p>Side income is taxed differently than a W-2 job. You owe self-employment tax (15.3%) on net income plus regular income tax. Set aside 25–30% of every payment you receive. Track all expenses — internet, equipment, and home office can be deductible.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>You have one massive advantage: time and low expenses. Skills like video editing, social media management, and graphic design are highly in-demand, learnable online for free, and can earn $20–$50/hour as a freelancer within months.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Freelancing your main job skill is the fastest path to side income with the least additional learning. A developer who freelances 5 hours/week at $75/hour earns an extra $18,000+/year — enough to max a Roth IRA and still have money left.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>With more life experience and established skills, consulting is often more lucrative than freelancing. If you have expertise worth sharing, online courses and coaching can become high-margin income streams that scale beyond your hours.</p></div>
+    <div class="tip">💡 Action step: Write down the one skill you have that people would pay for. Then spend 30 minutes researching what that skill pays on Upwork or Fiverr. The market rate is usually higher than people expect.</div>`
+  },
+
+  {
+    tag:"basics",tagLabel:"Basics",readMins:5,
+    title:"Understanding Your Net Worth",
+    summary:"Net worth is your financial scoreboard — the one number that captures where you actually stand, not just how much you earn.",
+    quiz:[
+      {q:"How is net worth calculated?",opts:["Annual income minus annual expenses","Total assets minus total liabilities","Your savings account balance","Monthly income × 12"],ans:1,exp:"Net worth = everything you own (assets) minus everything you owe (liabilities). A high income doesn't mean high net worth — if you're spending everything and carrying debt, your net worth may be low or even negative."},
+      {q:"Which of these is a liability?",opts:["Your car (current market value)","Your investment portfolio","Your student loan balance","The equity in your home"],ans:2,exp:"A liability is what you owe. Your student loan balance is a liability. The car itself (what it's worth) is an asset. Home equity (value minus mortgage) is an asset. Your investment portfolio is an asset."},
+      {q:"What's a reasonable net worth target by age 30?",opts:["$0 is fine at 30","1× your annual gross salary","$1 million","$10,000"],ans:1,exp:"A commonly cited benchmark: by 30, aim for 1× your annual income in net worth. By 40: 3×. By 50: 6×. These are targets, not requirements — what matters is trending in the right direction."}
+    ],
+    body:`<p>Most people focus on income as the measure of financial success. But a high earner who spends everything they make has the same net worth as someone who earns nothing. Net worth is what you actually keep.</p>
+    <h4>The formula</h4>
+    <p><strong>Net Worth = Total Assets − Total Liabilities</strong></p>
+    <ul>
+      <li><strong>Assets:</strong> Checking and savings accounts, investment accounts, retirement accounts (401k, IRA), home equity (home value minus mortgage balance), car value, cash value of life insurance</li>
+      <li><strong>Liabilities:</strong> Mortgage balance, student loans, car loans, credit card balances, personal loans, any money you owe</li>
+    </ul>
+    <h4>Why it matters more than income</h4>
+    <p>A doctor earning $250,000/year with $500,000 in student loans, a $700,000 mortgage, and no savings has a lower net worth than a teacher earning $55,000/year who has been consistently saving for 15 years. Income funds lifestyle. Net worth funds freedom.</p>
+    <h4>Benchmarks by age (rough guidelines)</h4>
+    <ul>
+      <li><strong>By 30:</strong> 1× your annual salary in net worth</li>
+      <li><strong>By 40:</strong> 3× your annual salary</li>
+      <li><strong>By 50:</strong> 6× your annual salary</li>
+      <li><strong>By 60:</strong> 8–10× your annual salary</li>
+    </ul>
+    <p>These are targets, not requirements. What matters most is that your number is moving in the right direction every year.</p>
+    <h4>How to track it</h4>
+    <p>Calculate your net worth once every 3–6 months. A simple spreadsheet works. Apps like Monarch Money or Empower (formerly Personal Capital) connect your accounts and calculate it automatically.</p>
+    <h4>By your stage</h4>
+    <div class="age-block hs"><strong>If you're just starting out</strong><p>Your net worth may be zero or slightly negative right now — that's completely normal. The habit of tracking it is more important than the number. Knowing where you stand is the first step to changing it.</p></div>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Student loans can make your net worth negative in your early 20s. Don't panic — focus on the trajectory. Every month you're making progress counts. Seeing your net worth move from -$40,000 to -$30,000 to -$20,000 is real progress worth tracking.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Your net worth should be clearly positive and growing. Home equity, retirement accounts, and investment accounts are doing the heavy lifting. Calculate it quarterly. If it's not growing, examine which liabilities are dragging it down.</p></div>
+    <div class="tip">💡 Action step: Calculate your net worth right now. List every asset (checking, savings, investments, car value, home equity) and every liability (loans, credit cards). Subtract one from the other. That number is your financial starting point — and it only goes up from here.</div>`
+  },
+
+  {
+    tag:"credit",tagLabel:"Credit",readMins:4,
+    title:"Debt Payoff Strategy",
+    summary:"Two proven methods for eliminating debt — one saves the most money, the other keeps you motivated. Knowing which one fits you matters.",
+    quiz:[
+      {q:"With the Avalanche method, which debt do you attack first?",opts:["Smallest balance","Highest interest rate","Largest balance","Oldest debt"],ans:1,exp:"The Avalanche method targets the highest interest rate first. This is mathematically optimal — you pay the least total interest over time. It requires patience because high-interest debt isn't always the smallest balance."},
+      {q:"Research shows the Snowball method has higher completion rates than Avalanche. Why?",opts:["It saves more money","It requires less discipline","Paying off small balances first creates motivational wins that keep people on track","Banks prefer it"],ans:2,exp:"Behavioral economics research shows people respond powerfully to visible progress. Eliminating smaller debts quickly creates momentum and a sense of control — which keeps people engaged with their payoff plan longer."},
+      {q:"You have a 4% student loan and can invest in a fund returning 8% historically. What's generally the better financial move?",opts:["Always pay off any debt first","Invest — the expected return (8%) exceeds the loan cost (4%)","Flip a coin","Pay off debt and never invest until debt-free"],ans:1,exp:"When debt interest rate is lower than expected investment returns, investing often wins mathematically. This is why most financial advisors suggest investing (especially in tax-advantaged accounts) alongside low-interest debt rather than only paying off debt first."}
+    ],
+    body:`<p>Debt feels like a wall. But with a clear strategy, it becomes a math problem — and math problems have solutions. The two most widely recommended approaches are the Avalanche and Snowball methods, and both work. The best one is the one you'll actually stick to.</p>
+    <h4>Method 1: Debt Avalanche (optimal mathematically)</h4>
+    <p>Pay minimums on all debts. Throw every extra dollar at the debt with the <strong>highest interest rate</strong>. Once that's gone, attack the next highest rate. Repeat.</p>
+    <p>Why it works: High-interest debt is the most expensive. Eliminating it first minimizes the total interest you pay across all debts. On a $20,000 debt load, the Avalanche can save $1,000–$3,000+ compared to Snowball.</p>
+    <h4>Method 2: Debt Snowball (optimal psychologically)</h4>
+    <p>Pay minimums on all debts. Throw every extra dollar at the debt with the <strong>smallest balance</strong>, regardless of rate. Once that's gone, roll that payment into the next smallest. Repeat.</p>
+    <p>Why it works: Paying off a full balance creates a genuine sense of progress. Research shows people are more likely to stay committed to a debt payoff plan when they see early wins.</p>
+    <h4>Invest vs. pay off debt — the real question</h4>
+    <p>A useful rule of thumb:</p>
+    <ul>
+      <li>Debt above <strong>7–8% interest:</strong> Pay it down aggressively before investing beyond your employer match.</li>
+      <li>Debt at <strong>4–6%:</strong> Split your extra money between investing and debt payoff. The math is close enough that either is reasonable.</li>
+      <li>Debt below <strong>4%:</strong> Make minimum payments and invest the rest. Expected market returns (historically 7–10%) likely exceed the debt cost.</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Student loans at 4–6% don't need to be your enemy. List all your debts with balances and interest rates. Choose your method. Automate the minimum payments. Then direct every spare dollar systematically. The plan matters more than the amount.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Credit card debt above 20% should be the only financial emergency on your plate. Everything else — mortgage, auto loans, student loans — is a scheduled payoff. Eliminate high-interest debt first, always, before doing anything else with extra money.</p></div>
+    <div class="tip">💡 Action step: List every debt you have right now: name, balance, interest rate, minimum payment. Sort by interest rate (Avalanche) or by balance (Snowball). Pick one method. Set up autopay for the minimums and automate an extra payment to your top target.</div>`
+  },
+
+  {
+    tag:"basics",tagLabel:"Basics",readMins:5,
+    title:"Buying vs. Renting a Home",
+    summary:"Homeownership isn't always the smart financial move — and renting isn't always throwing money away. The math is more nuanced than most people realize.",
+    quiz:[
+      {q:"What is the '5% rule' for comparing buying vs. renting?",opts:["Buy if you can put 5% down","If the annual cost of owning (property tax + maintenance + cost of equity) exceeds 5% of home value, renting may be cheaper","Always buy if mortgage is less than 5% above rent","Homes appreciate 5% per year on average"],ans:1,exp:"The 5% rule: multiply the home price by 5% and divide by 12 to estimate the monthly 'unrecoverable' cost of owning (taxes, maintenance, and opportunity cost of the down payment). If rent is cheaper, renting may be the smarter financial move."},
+      {q:"Which cost of homeownership do most first-time buyers underestimate?",opts:["Mortgage payment","Property taxes","Maintenance and repairs (typically 1–2% of home value per year)","Homeowner's insurance"],ans:2,exp:"Maintenance is the most commonly underestimated cost. A $400,000 home costs $4,000–$8,000/year in maintenance on average — sometimes much more. New appliances, roof repairs, HVAC, plumbing, and landscaping add up quickly."},
+      {q:"What does 'home equity' mean?",opts:["The total value of your home","The difference between your home's market value and what you still owe on the mortgage","Your property tax assessment","The interest you've paid on your mortgage"],ans:1,exp:"Equity is what you actually 'own' in your home. If your home is worth $350,000 and you owe $250,000 on the mortgage, your equity is $100,000. Equity builds as you pay down the mortgage and as the home value appreciates."}
+    ],
+    body:`<p>"Renting is throwing money away." You've heard this. It's not entirely true — and treating homeownership as automatically superior to renting has led many people into financially difficult situations. Here's the actual framework for thinking about this decision.</p>
+    <h4>The real costs of homeownership</h4>
+    <p>Most people compare rent to mortgage payment. But owning includes several additional costs that don't go away:</p>
+    <ul>
+      <li><strong>Property taxes:</strong> Typically 0.5–2%+ of home value per year.</li>
+      <li><strong>Maintenance and repairs:</strong> Budget 1–2% of home value annually. A $400k home = $4,000–$8,000/year in ongoing upkeep.</li>
+      <li><strong>Homeowner's insurance:</strong> $1,000–$2,500/year typically.</li>
+      <li><strong>Mortgage interest:</strong> In the early years, most of your payment is interest, not principal.</li>
+      <li><strong>Transaction costs:</strong> Buying and selling a home costs 6–10% of the home's value in agent fees, closing costs, and moving expenses. If you move in 2–3 years, these costs erase most appreciation.</li>
+    </ul>
+    <h4>When buying makes sense</h4>
+    <ul>
+      <li>You plan to stay 5+ years (ideally 7+) — long enough to overcome transaction costs and build equity</li>
+      <li>You have a 20% down payment (avoids PMI — private mortgage insurance)</li>
+      <li>Your monthly PITI (principal, interest, taxes, insurance) is no more than 28% of gross income</li>
+      <li>You have 3–6 months of expenses <em>after</em> the down payment — emergencies don't wait</li>
+    </ul>
+    <h4>When renting makes sense</h4>
+    <ul>
+      <li>You're likely to move within 3–5 years</li>
+      <li>Local home prices are very high relative to rents (price-to-rent ratio above 20)</li>
+      <li>You're not financially ready — the down payment would drain your emergency fund</li>
+      <li>You value flexibility more than stability right now</li>
+    </ul>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>Don't rush into buying because it feels like "what adults do." Your 20s are often a period of career movement, city changes, and lifestyle experimentation. Renting provides flexibility that homeownership removes. Build your down payment fund first — there's no deadline.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>If you have stability — career, relationship, city — and a solid down payment, buying starts making strong financial and lifestyle sense. Run the actual numbers for your market: mortgage + taxes + insurance + maintenance vs. equivalent rent. The result often surprises people.</p></div>
+    <div class="tip">💡 Action step: Use the NYT "Is It Better to Buy or Rent?" calculator (search it). Enter your local home prices, expected rent, and how long you plan to stay. It runs the full math and gives a clear recommendation based on your specific numbers.</div>`
+  },
+
+  {
+    tag:"investing",tagLabel:"Investing",readMins:4,
+    title:"Asset Allocation & Diversification",
+    summary:"How you split money between stocks and bonds drives over 90% of long-term returns — more than any individual investment you pick.",
+    quiz:[
+      {q:"Research suggests what percentage of long-term portfolio returns is explained by asset allocation?",opts:["10–20%","50%","Over 90%","It varies too much to say"],ans:2,exp:"The landmark Brinson, Hood & Beebower study found that asset allocation explains over 90% of long-term portfolio performance — not stock selection or market timing. Getting the right mix of stocks, bonds, and cash matters far more than picking winners."},
+      {q:"A 28-year-old investor with a 35-year time horizon should generally hold:",opts:["Mostly bonds for safety","Mostly stocks (80–100%) because they have time to recover from downturns","An equal 50/50 split","Mostly cash to avoid risk"],ans:1,exp:"Young investors have time to ride out market volatility. Historically, a 100% stock portfolio has always recovered from crashes — given enough time. Bonds reduce short-term volatility but also reduce long-term returns. Young investors can and should take more equity risk."},
+      {q:"What does rebalancing mean?",opts:["Selling all investments and starting over","Adjusting your portfolio back to your target allocation after market movements change the percentages","Adding more money to the best-performing investments","Switching from stocks to bonds permanently"],ans:1,exp:"Rebalancing means returning to your target allocation. If stocks rise from 70% to 85% of your portfolio, you sell some stocks and buy bonds to restore 70/30. This enforces 'buy low, sell high' automatically."}
+    ],
+    body:`<p>Most investors obsess over which individual stocks or funds to pick. Research consistently shows this is the wrong focus. How you divide your money among asset classes — stocks, bonds, real estate, cash — explains the vast majority of your long-term results.</p>
+    <h4>The core asset classes</h4>
+    <ul>
+      <li><strong>Stocks (equities):</strong> Ownership in companies. Highest long-term returns (~7–10% historically), highest volatility. Can drop 40–50% in crashes.</li>
+      <li><strong>Bonds (fixed income):</strong> Loans to governments or corporations. Lower returns (~2–5%), lower volatility. Cushions your portfolio when stocks fall.</li>
+      <li><strong>Real estate:</strong> Can own directly or via REITs (real estate investment trusts — publicly traded property funds).</li>
+      <li><strong>Cash / equivalents:</strong> Savings accounts, T-bills, money market funds. Lowest returns, maximum stability.</li>
+    </ul>
+    <h4>Age-based allocation rules of thumb</h4>
+    <ul>
+      <li>Simple rule: hold your age in bonds (30 years old → 30% bonds, 70% stocks)</li>
+      <li>Aggressive rule: 110 minus your age in stocks (30 years old → 80% stocks)</li>
+      <li>Simplest of all: use a target-date fund (e.g. "2055 Fund") — it adjusts automatically as you age</li>
+    </ul>
+    <h4>Why diversification is so powerful</h4>
+    <p>If you own 1 stock and it drops 50%, your portfolio is down 50%. If you own 500 stocks (via an index fund), one company's collapse barely moves the needle. Diversification doesn't just reduce risk — it maintains your expected return while reducing the volatility around it.</p>
+    <h4>Rebalancing</h4>
+    <p>After a bull market, stocks grow to dominate. A 70/30 split drifts to 85/15. Rebalance annually (or when you drift more than 5% from target): sell the winner, buy the laggard. This forces discipline — selling high and buying low — without requiring any emotional decision-making.</p>
+    <h4>By your stage</h4>
+    <div class="age-block twenties"><strong>If you're early in your career</strong><p>At 22–28, you can hold 90–100% stocks. Your 35+ year time horizon is enough to recover from any crash. The risk isn't volatility — it's being too conservative and growing too slowly to reach your goals.</p></div>
+    <div class="age-block thirties"><strong>If you're in your wealth-building years</strong><p>Still mostly stocks — 80–85%. Consider adding international exposure (VXUS) if your portfolio is all US stocks. US stocks have dominated for years but that won't always be true. A small bond allocation starts making sense if you have short-term needs (house purchase) or major financial responsibilities.</p></div>
+    <div class="tip">💡 Action step: Log into every investment account you have. Add up total value by asset class — what percentage is in stocks vs. bonds vs. cash? Compare to your target. If cash is significant and you don't need it within 2 years, it's silently costing you long-term growth.</div>`
+  }
+];
+
+// ============ RENDER CARDS ============
+let activeFilter='all', activeQuery='';
+
+function updateProgress(){
+  const pct=topics.length?Math.round((readLessons.length/topics.length)*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=`${readLessons.length} of ${topics.length} lessons read`;
+}
+
+function renderCards(){
+  const grid=document.getElementById('grid');
+  const info=document.getElementById('resultsInfo');
+  const q=activeQuery.toLowerCase();
+  let visible=0;
+  grid.innerHTML='';
+  topics.forEach((t,i)=>{
+    const mf=activeFilter==='all'||t.tag===activeFilter;
+    const ms=!q||t.title.toLowerCase().includes(q)||t.summary.toLowerCase().includes(q)||t.tag.includes(q);
+    const show=mf&&ms;
+    if(show)visible++;
+    const isRead=readLessons.includes(t.title);
+    const isBm=bookmarks.includes(t.title);
+    const card=document.createElement('div');
+    card.className='card'+(show?'':' hidden');
+    card.style.animationDelay=`${(i%12)*40}ms`;
+    card.innerHTML=`
+      <div class="card-top">
+        <span class="card-tag tag-${t.tag}">${t.tagLabel}</span>
+        <div class="card-icons">
+          ${isRead?'<span class="read-badge">Read</span>':''}
+          <button class="bookmark-btn ${isBm?'saved':''}" onclick="event.stopPropagation();toggleBookmark('${t.title.replace(/'/g,"\\'")}',this)" title="${isBm?'Remove bookmark':'Bookmark'}">${isBm?'🔖':'🔖'}</button>
+        </div>
+      </div>
+      <h3>${t.title}</h3>
+      <p>${t.summary}</p>
+      <div class="card-read-time">📖 ${t.readMins} min read</div>
+    `;
+    card.onclick=()=>openLesson(t);
+    grid.appendChild(card);
+  });
+  if(visible===0)grid.innerHTML=`<div class="no-results"><span>🔍</span>No results found.</div>`;
+  info.textContent=(q||activeFilter!=='all')?`Showing ${visible} of ${topics.length} topics`:`${topics.length} lessons`;
+  updateProgress();
+}
+
+function filterCards(){activeQuery=document.getElementById('search').value;renderCards();}
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCards();}
+
+// ============ BOOKMARKS ============
+function toggleBookmark(title,btn){
+  const idx=bookmarks.indexOf(title);
+  if(idx===-1){bookmarks.push(title);if(btn){btn.classList.add('saved');}}
+  else{bookmarks.splice(idx,1);if(btn){btn.classList.remove('saved');}}
+  saveState();renderCards();
+}
+function toggleLessonBookmark(){
+  if(!currentTopic)return;
+  const title=currentTopic.title;
+  const idx=bookmarks.indexOf(title);
+  const btn=document.getElementById('lessonBmBtn');
+  if(idx===-1){bookmarks.push(title);btn.textContent='🔖 Saved';btn.classList.add('saved');}
+  else{bookmarks.splice(idx,1);btn.textContent='🔖 Save';btn.classList.remove('saved');}
+  saveState();renderCards();
+}
+function renderBookmarks(){
+  const grid=document.getElementById('bookmarksGrid');
+  if(!bookmarks.length){grid.innerHTML='<div class="bookmarks-empty"><span>🔖</span>No saved lessons yet. Tap the bookmark icon on any lesson card or inside a lesson.</div>';return;}
+  grid.innerHTML='';
+  topics.filter(t=>bookmarks.includes(t.title)).forEach((t,i)=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.animationDelay=`${i*40}ms`;
+    card.innerHTML=`<div class="card-top"><span class="card-tag tag-${t.tag}">${t.tagLabel}</span><button class="bookmark-btn saved" onclick="event.stopPropagation();toggleBookmark('${t.title.replace(/'/g,"\\'")}',this);renderBookmarks()">🔖</button></div><h3>${t.title}</h3><p>${t.summary}</p><div class="card-read-time">📖 ${t.readMins} min read</div>`;
+    card.onclick=()=>openLesson(t);
+    grid.appendChild(card);
+  });
+}
+
+// ============ LESSON ============
+function openLesson(t){
+  currentTopic=t;
+  // mark as read
+  if(!readLessons.includes(t.title)){readLessons.push(t.title);saveState();}
+  // build body
+  document.getElementById('lessonBody').innerHTML=`<span class="card-tag tag-${t.tag}">${t.tagLabel}</span><h2>${t.title}</h2>${t.body}`;
+  // init calculator if this lesson has one
+  if(t.tag==='basics'&&t.title==='Compound Interest'){setTimeout(updateCalc,100);}
+  // bookmark button state
+  const bmBtn=document.getElementById('lessonBmBtn');
+  if(bookmarks.includes(t.title)){bmBtn.textContent='🔖 Saved';bmBtn.classList.add('saved');}
+  else{bmBtn.textContent='🔖 Save';bmBtn.classList.remove('saved');}
+  // next lesson
+  const idx=topics.indexOf(t);
+  const next=topics[idx+1];
+  const nb=document.getElementById('nextLessonBlock');
+  if(next){nb.innerHTML=`<div class="next-lesson-block" onclick="openLesson(topics[${idx+1}])"><div><div class="next-lesson-label">Next lesson</div><div class="next-lesson-title">${next.title}</div></div><span class="next-arrow">→</span></div>`;}
+  else{nb.innerHTML='';}
+  // chat
+  lessonHistory=[];lessonThinking=false;
+  document.getElementById('lessonSendBtn').disabled=false;
+  const msgs=document.getElementById('lessonMessages');
+  msgs.innerHTML='';
+  addLessonMessage('ai',`I just read the <strong>${t.title}</strong> lesson. Ask me anything — simpler explanations, real examples, or what to do next.`);
+  lessonHistory=[
+    {role:'user',content:`I'm reading the lesson on "${t.title}". Content summary: ${t.body.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,600)}`},
+    {role:'assistant',content:`Got it! I've read the "${t.title}" lesson. Ask me anything.`}
+  ];
+  // switch page
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-lesson').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('advisorTrigger').classList.remove('hidden');
+  window.scrollTo(0,0);
+  renderCards();
+}
+function openDrawer(){
+  document.getElementById('advisorDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('advisorTrigger').classList.add('hidden');
+  setTimeout(()=>document.getElementById('lessonChatInput').focus(),350);
+}
+function closeDrawer(){
+  document.getElementById('advisorDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('advisorTrigger').classList.remove('hidden');
+}
+function closeLesson(){
+  closeDrawer();closeQuiz();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-guide').classList.add('active');
+  document.querySelectorAll('.nav-tab')[0].classList.add('active');
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('quizOverlay').classList.contains('open'))closeQuiz();
+    else if(document.getElementById('advisorDrawer').classList.contains('open'))closeDrawer();
+    else if(document.getElementById('page-lesson').classList.contains('active'))closeLesson();
+  }
+});
+
+// ============ COMPOUND INTEREST CALCULATOR ============
+function updateCalc(){
+  const P=+document.getElementById('calcP').value;
+  const M=+document.getElementById('calcM').value;
+  const r=+document.getElementById('calcR').value/100;
+  const y=+document.getElementById('calcY').value;
+  document.getElementById('calcPval').textContent='$'+P.toLocaleString();
+  document.getElementById('calcMval').textContent='$'+M+'/mo';
+  document.getElementById('calcRval').textContent=document.getElementById('calcR').value+'%';
+  document.getElementById('calcYval').textContent=y+' yrs';
+  const n=y*12;
+  const mr=r/12;
+  let fv=P*Math.pow(1+mr,n);
+  if(mr>0)fv+=M*(Math.pow(1+mr,n)-1)/mr;
+  else fv+=M*n;
+  const contributed=P+M*n;
+  const interest=fv-contributed;
+  document.getElementById('calcResult').innerHTML=`
+    <div class="calc-stat"><div class="num">$${Math.round(fv).toLocaleString()}</div><div class="lbl">Final value</div></div>
+    <div class="calc-stat"><div class="num">$${Math.round(contributed).toLocaleString()}</div><div class="lbl">You invested</div></div>
+    <div class="calc-stat"><div class="num">$${Math.round(interest).toLocaleString()}</div><div class="lbl">Interest earned</div></div>
+  `;
+  const maxBar=fv;
+  document.getElementById('calcBars').innerHTML=`
+    <div class="calc-bar-row"><span style="width:90px">Contributed</span><div class="calc-bar-track"><div class="calc-bar-fill" style="width:${(contributed/maxBar*100).toFixed(1)}%;background:var(--gold)"></div></div><span>$${Math.round(contributed).toLocaleString()}</span></div>
+    <div class="calc-bar-row"><span style="width:90px">Interest</span><div class="calc-bar-track"><div class="calc-bar-fill" style="width:${(interest/maxBar*100).toFixed(1)}%;background:var(--accent)"></div></div><span>$${Math.round(interest).toLocaleString()}</span></div>
+  `;
+}
+
+// ============ QUIZ ============
+let quizState={topic:null,qIdx:0,score:0,answered:false};
+function openQuiz(){
+  if(!currentTopic||!currentTopic.quiz)return;
+  quizState={topic:currentTopic,qIdx:0,score:0,answered:false};
+  renderQuizQuestion();
+  document.getElementById('quizOverlay').classList.add('open');
+}
+function closeQuiz(){document.getElementById('quizOverlay').classList.remove('open');}
+function renderQuizQuestion(){
+  const {topic,qIdx,score}=quizState;
+  const q=topic.quiz[qIdx];
+  const total=topic.quiz.length;
+  if(qIdx>=total){
+    // score screen
+    const pct=Math.round(score/total*100);
+    const msg=pct===100?'Perfect score! 🎉':pct>=66?'Great work! 💪':pct>=33?'Good start — review the lesson and try again.':'Review the lesson again and retry.';
+    document.getElementById('quizContent').innerHTML=`
+      <div class="quiz-header"><h3>Quiz complete</h3><div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div></div>
+      <div class="quiz-score">
+        <div class="score-num">${score}/${total}</div>
+        <p>${msg}</p>
+        <button class="retake" onclick="quizState.qIdx=0;quizState.score=0;quizState.answered=false;renderQuizQuestion()">Retake quiz</button>
+      </div>`;
+    return;
+  }
+  document.getElementById('quizContent').innerHTML=`
+    <div class="quiz-header">
+      <h3>${topic.title}</h3>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem;">Question ${qIdx+1} of ${total}</div>
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${((qIdx)/total*100)}%"></div></div>
+    </div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options" id="quizOpts">
+      ${q.opts.filter(Boolean).map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+    </div>
+    <div id="quizFeedback"></div>
+    <button class="quiz-next-btn" id="quizNextBtn" style="display:none" onclick="nextQuestion()">${qIdx+1<total?'Next question':'See results'}</button>
+  `;
+}
+function answerQuiz(i){
+  if(quizState.answered)return;
+  quizState.answered=true;
+  const q=quizState.topic.quiz[quizState.qIdx];
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach(b=>b.disabled=true);
+  const correct=i===q.ans;
+  if(correct)quizState.score++;
+  opts[i].classList.add(correct?'correct':'wrong');
+  if(!correct)opts[q.ans].classList.add('reveal');
+  document.getElementById('quizFeedback').innerHTML=`<div class="quiz-feedback ${correct?'correct':'wrong'}">${correct?'✓ Correct — ':'✗ Not quite — '}${q.exp}</div>`;
+  document.getElementById('quizNextBtn').style.display='block';
+}
+function nextQuestion(){
+  quizState.qIdx++;quizState.answered=false;renderQuizQuestion();
+}
+
+// ============ LESSON CHATBOT ============
+let lessonHistory=[], lessonThinking=false;
+const LESSON_SYSTEM=`You are a friendly personal finance advisor inside a lesson page in "Finance Fundamentals." The user is reading a specific lesson and may have questions.
+Tone: warm, direct, like a smart friend. Zero jargon unless explained immediately.
+- Answer questions about the topic they're reading specifically
+- Use concrete dollar examples wherever possible
+- Keep answers concise — this is a sidebar chat
+- Bold key terms with <strong>
+- Use <ul><li> for lists
+- End with a <div class="b-tip"> action step when it adds value
+- This is educational, not licensed financial advice`;
+
+async function sendLessonMessage(){
+  const input=document.getElementById('lessonChatInput');
+  const text=input.value.trim();
+  if(!text||lessonThinking)return;
+  input.value='';input.style.height='auto';
+  addLessonMessage('user',text);
+  lessonHistory.push({role:'user',content:text});
+  showLessonTyping();lessonThinking=true;
+  document.getElementById('lessonSendBtn').disabled=true;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'PASTE_YOUR_KEY_HERE','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:LESSON_SYSTEM,messages:lessonHistory})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"Sorry, couldn't get a response. Try again.";
+    lessonHistory.push({role:'assistant',content:reply});
+    removeLessonTyping();addLessonMessage('ai',reply);
+  }catch(e){removeLessonTyping();addLessonMessage('ai',"Something went wrong. Please try again.");}
+  lessonThinking=false;document.getElementById('lessonSendBtn').disabled=false;
+}
+function addLessonMessage(role,content){
+  const msgs=document.getElementById('lessonMessages');
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  div.innerHTML=`<div class="avatar ${role}">${role==='ai'?'FF':'👤'}</div><div class="bubble ${role}">${role==='ai'?content:esc(content)}</div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function showLessonTyping(){
+  const msgs=document.getElementById('lessonMessages');
+  const div=document.createElement('div');div.className='msg';div.id='lesson-typing';
+  div.innerHTML=`<div class="avatar ai">FF</div><div class="bubble ai"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function removeLessonTyping(){const t=document.getElementById('lesson-typing');if(t)t.remove();}
+function handleLessonKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendLessonMessage();}}
+
+// ============ MAIN CHATBOT ============
+let chatHistory=[],isThinking=false;
+const SYSTEM_PROMPT=`You are a friendly, knowledgeable personal finance advisor inside "Finance Fundamentals."
+Tone: warm, direct, conversational — like a smart older friend. Never condescending. Zero jargon unless explained.
+Always tailor advice to life stage when mentioned. Use concrete dollar examples. Give actionable steps.
+Bold key terms with <strong>. Use <ul><li> for lists. Use <div class="b-tip"> for action steps.
+This is educational, not licensed advice.`;
+
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text||isThinking)return;
+  input.value='';input.style.height='auto';
+  addMessage('user',text);
+  document.getElementById('starters').style.display='none';
+  chatHistory.push({role:'user',content:text});
+  showTyping();isThinking=true;
+  document.getElementById('sendBtn').disabled=true;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'PASTE_YOUR_KEY_HERE','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM_PROMPT,messages:chatHistory})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"Sorry, couldn't get a response. Try again.";
+    chatHistory.push({role:'assistant',content:reply});
+    removeTyping();addMessage('ai',reply);
+  }catch(e){removeTyping();addMessage('ai',"Something went wrong. Please try again.");}
+  isThinking=false;document.getElementById('sendBtn').disabled=false;
+}
+function sendStarter(btn){document.getElementById('chatInput').value=btn.textContent;sendMessage();}
+function addMessage(role,content){
+  const msgs=document.getElementById('messages');
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  div.innerHTML=`<div class="avatar ${role}">${role==='ai'?'FF':'👤'}</div><div class="bubble ${role}">${role==='ai'?content:esc(content)}</div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function showTyping(){
+  const msgs=document.getElementById('messages');
+  const div=document.createElement('div');div.className='msg';div.id='typing-indicator';
+  div.innerHTML=`<div class="avatar ai">FF</div><div class="bubble ai"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+
+renderCards();
+</script>
+</body>
+</html>
